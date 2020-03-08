@@ -1,0 +1,20 @@
+{% extends 'CodeClone/base.html'%}
+
+{% block body %}
+
+<div class="row">
+	<div class="eightcol column">
+		<div class="row">
+			<h1>Register</h1>
+		</div>
+		<form class="ajax-form formatted-form" action="" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{% include 'Accounts/form-template.html' %}
+			<div class="row">
+				<button class="element-button">Register</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

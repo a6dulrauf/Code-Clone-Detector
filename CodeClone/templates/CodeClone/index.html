@@ -1,0 +1,23 @@
+{% extends 'CodeClone/base.html'%}
+
+{% block title %} DETECTOR {% endblock %}
+{% load static %}
+{% block body%}
+<div>
+    <div class="featured-content">
+            <div class="row">
+                <div class="text-center">
+                    <h1>TEST PLAGIARISM BETWEEN YOUR PROJECTS</h1>
+                </div>
+                <div class="text-center">
+                <a class="element-button" href="{% url 'dashboard'  %}">CHECK PLAGIARISM</a>
+                </div>
+                <!-- /page title -->
+            </div>
+    </div>
+    <div style="background-image: url({% static 'CodeClone/images/bgs/kodeBg.jpg' %});">
+        <img src="{% static 'CodeClone/images/bgs/kodeBg.jpg' %}" style="" alt="Background-Image">
+    </div>
+</div>
+
+{% endblock %}

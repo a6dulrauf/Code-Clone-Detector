@@ -1,0 +1,67 @@
+
+{% extends 'CodeClone/base.html'%}
+
+{% block title %} SignUp/SignIn {% endblock %}
+
+{% block body%}
+<!-- /featured -->
+<div class="main-content">
+	<div class="row">
+		<div class="eightcol column">
+			<h1>Register</h1>
+			<form class="ajax-form formatted-form" action="" method="POST">
+				<div class="message"></div>
+				<div class="sixcol column">
+					<div class="field-wrapper">
+						<input type="text" name="user_login" placeholder="Username" />
+					</div>
+				</div>
+				<div class="sixcol column last">
+					<div class="field-wrapper">
+						<input type="text" name="user_email" placeholder="Email" />
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div class="sixcol column">
+					<div class="field-wrapper">
+						<input type="password" name="user_password" placeholder="Password" />
+					</div>
+				</div>
+				<div class="sixcol column last">
+					<div class="field-wrapper">
+						<input type="password" name="user_password_repeat" placeholder="Repeat Password" />
+					</div>
+				</div>
+				<div class="clear"></div>
+				<a href="{% url 'dashboard' %}" class="element-button submit-button left"><span class="button-icon register"></span>Register</a>
+				<div class="form-loader"></div>
+				<input type="hidden" name="user_action" value="register_user" />
+				<input type="hidden" name="user_redirect" value="" />
+				<input type="hidden" name="nonce" class="nonce" value="7406f7ee0c" />
+				<input type="hidden" name="action" class="action" value="themex_update_user" />
+			</form>
+		</div>
+	<div class="fourcol column last">
+		<h1>Sign In</h1>
+		<form class="ajax-form formatted-form" action="{% url 'login' %}" method="POST">
+			<div class="message"></div>
+			<div class="field-wrapper">
+				<input type="text" name="user_login" placeholder="Username" />
+			</div>
+			<div class="field-wrapper">
+				<input type="password" name="user_password" placeholder="Password" />
+			</div>
+			<a href="{% url 'dashboard' %}" class="element-button submit-button left"><span class="button-icon login"></span>Sign In</a>
+					<div class="form-loader"></div>
+			<input type="hidden" name="user_action" value="login_user" />
+			<input type="hidden" name="user_redirect" value="" />
+			<input type="hidden" name="nonce" class="nonce" value="7406f7ee0c" />
+			<input type="hidden" name="action" class="action" value="themex_update_user" />
+		</form>
+		</div>
+		<div class="clear"></div>
+		<br />
+	</div>
+</div>
+
+{% endblock %}

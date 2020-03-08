@@ -1,0 +1,70 @@
+{% extends 'CodeClone/dashboard_base.html'%}
+
+{% block title %} CONTACT US {% endblock %}
+
+{% block css %}
+<style>
+
+
+.map iframe {
+	width: 100%;
+	height: 100%;
+}
+
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="content">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col">
+                <h2 class="text-uppercase font-weight-bold">Contact Us</h2>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-3">
+                <form class="form">
+                </form>
+            </div>
+            <div class="col-9">
+                <div class="map">
+                    {% if model%}
+                    {% load custom_filters %}
+                    {% for key, value in model.items %}
+                        {% for i in value %}
+
+                            {{value|Index:key}}
+                        {% endfor %}
+                    {% endfor %}
+                    {% endif %}
+<!--                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14376.-->
+<!--                                !2d-73.879277264103!3d40.757667781624285!2m3!1f0!2f0!3f0!3m2!1i1024!2i7-->
+<!--                                68!4f13.1!5e0!3m2!1sen!2sbd!4v1546528920522"-->
+<!--                            style="border:0" allowfullscreen>-->
+<!--                    </iframe>-->
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initGoogleMaps();
+    });
+  </script>
+{% endblock %}
