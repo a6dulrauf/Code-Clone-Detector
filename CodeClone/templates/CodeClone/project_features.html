@@ -1,0 +1,220 @@
+{% extends 'CodeClone/dashboard_base.html'%}
+
+{% block title %} USER PANEL {% endblock %}
+
+{% block css %}
+<style>
+.table-wrapper {
+  max-height: 530px;
+  overflow: auto;
+  display:inline-block;
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: 'Choose Project';
+}
+
+
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div>
+    <div class="row">
+      <div class="col">
+          <div class="d-flex justify-content-center">
+              <h2 class="text-uppercase font-weight-bold text-danger"> PROJECT FEATURES AND PLAGIARISM </h2>
+          </div>
+      </div>
+  </div>
+
+    <div class="row d-flex">
+      <div class="col">
+          <form class="form" id="form_project" action="{% url 'project-features' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <!---{{form.as_p}}-->
+              <div class="file-field">
+                  <div class="btn btn-primary">
+                      <span for="upload_project1">UPLOAD PROJECT 1</span>
+                      <input required id="upload_project1" type="file" name="project1" multiple="true" webkitdirectory="true" directory = "true"/>
+                  </div>
+                  <div class="btn btn-primary">
+                      <span for="upload_project2">UPLOAD PROJECT 2</span>
+                      <input required id="upload_project2" type="file" name="project2" multiple="true" webkitdirectory="true" directory = "true"/>
+                  </div>
+                  <div class="btn btn-primary">
+                      <span>Select NGRAM value</span>
+                      <input type="number" value="1" name="nGramRange" min="1" max="3" placeholder="Enter Ngram Metrics Range"/>
+                  </div>
+              </div>
+              <button class="btn btn-danger" id="test_plagiarism" name="test_plagiarism">TEST PLAGIARISM</button>
+          </form>
+      </div>
+  </div>
+
+    <div class="row">
+      <div class="col d-flex justify-content-center">
+          {% if model.result %}
+            <h1>Result : {{ model.result}} %</h1>
+          {% endif %}
+      </div>
+  </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col">
+          <div class="card">
+              <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Project 1</h4>
+                  <p class="card-category">Project Features</p>
+              </div>
+              <div class="card-body">
+                  <div class="table-responsive table-wrapper">
+                      <table class="table">
+                          <thead class=" text-primary">
+                          <th>
+                                ID
+                            </th>
+                          <th>
+                                Feature
+                            </th>
+                          <th>
+                                Frequency
+                            </th>
+                          </thead>
+                          <tbody>
+                          {% if model.result %}
+                            {% for feature, freq in model.features1.items %}
+                            <tr>
+                              <td>
+                                {{forloop.count}}
+                              </td>
+                              <td>
+                                {{feature}}
+                              </td>
+                              <td>
+                                {{freq.0}}
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          {% endif %}
+                          </tbody>
+                    </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card">
+              <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Project 2</h4>
+                  <p class="card-category">Project Features</p>
+                </div>
+              <div class="card-body">
+                  <div class="table-responsive table-wrapper">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          ID
+                        </th>
+                        <th>
+                          Feature
+                        </th>
+                        <th>
+                          Frequency
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% if model.result %}
+                            {% for feature, freq in model.features2.items %}
+                            <tr>
+                              <td>
+                                {{forloop.count}}
+                              </td>
+                              <td>
+                                {{feature}}
+                              </td>
+                              <td>
+                                {{freq.0}}
+                              </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal : Popup -->
+<div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Subscribe</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+            <form id="form_modal" class="form" method="" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label class="text-uppercase font-weight-bold"><span class="fa fa-user prefix grey-text"></span>Email</label>
+                <input id="modal_username" type="email" class="form-control" placeholder="Enter Your Email" required/>
+                <label class="text-uppercase font-weight-bold"><span class="fa fa-envelope prefix grey-text"></span>Password</label>
+                <input id="modal_email" type="password"class="form-control validate" placeholder="Enter Your Password" required/>
+            </form>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="submit" id="submit_user" class="btn btn-indigo">Send<span class="fa fa-paper-plane-o ml-1"></span></button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal : Popup-->
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+
+<!--    $(document).ready(function() {-->
+<!--        var project_form = $('#form_project')-->
+<!--        var modal_form = $('#form_modal')-->
+<!--        $('#test_plagiarism').click(function () {-->
+<!--            if(project_form[0].checkValidity()){-->
+<!--                $("#modalSubscriptionForm").modal();-->
+<!--            }else{-->
+<!--                project_form[0].reportValidity();-->
+<!--            }-->
+<!--        });-->
+
+<!--        $('#submit_user').click(function () {-->
+
+<!--            if(modal_form[0].checkValidity()){-->
+<!--                $("#modalSubscriptionForm").modal('hide');-->
+<!--                var name = $("#modal_username").val();-->
+<!--                var email = $("#modal_email").val();-->
+<!--                $('#user_name').val(name);-->
+<!--                $('#user_email').val(email);-->
+
+<!--                project_form[0].submit();-->
+
+<!--            }else{-->
+<!--                modal_form[0].reportValidity();-->
+<!--            }-->
+<!--        });-->
+
+<!--    });-->
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'CodeClone/dashboard_base.html'%}
+
+{% block css %}
+<style>
+.table-wrapper {
+  max-height: 530px;
+  overflow: auto;
+  display:inline-block;
+}
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div>
+
+    <div class="row">
+          <div class="col">
+              <div class="d-flex justify-content-center">
+                  <h2 class="text-uppercase font-weight-bold text-danger"> PROJECT INTERNAL FEATURES AND PLAGIARISM </h2>
+              </div>
+          </div>
+      </div>
+
+    <div class="row">
+          <div class="col-md-3 col-sm-3">
+
+          </div>
+          <div class="col-md-3 col-sm-3 d-flex justify-content-center">
+              <form class="form" action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input class="btn btn-primary" type="submit" name="project1_features" value="PROJECT 1"/>
+              </form>
+          </div>
+          <div class="col-md-3 col-sm-3 d-flex justify-content-center">
+              <form class="form" action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input class="btn btn-primary" type="submit" name="project2_features" value="PROJECT 2"/>
+              </form>
+          </div>
+          <div class="col-md-3 col-sm-3">
+
+          </div>
+      </div>
+
+    <hr>
+
+    <div class="row">
+          {% if model.result and model.features %}
+
+            {% for key, val in model.result.items %}
+                <div class="col-12">
+                    <div class="card">
+                        {% if key != 'dfs' and key != 'dfsnames' %}
+                          <div class="card-header card-header-primary">
+                              <h3 class="card-title ">{{key}}</h3>
+                              <h4 class="card-category"> Plagiarism : {{val}} %</h4>
+                          </div>
+                          <div class="card-body">
+                              <div class="table-responsive table-wrapper">
+
+                                  {% for k,v in model.features.items %}
+
+                                    {% if k == key %}
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <table class="table">
+                                                    <thead class=" text-primary">
+                                                      <th>
+                                                        ID
+                                                      </th>
+                                                      <th>
+                                                        Feature
+                                                      </th>
+                                                      <th>
+                                                        Frequency
+                                                      </th>
+                                                    </thead>
+                                                    {% for fea, freq in v.0.items %}
+                                                        <tbody>
+                                                            <tr>
+                                                            <td>
+                                                              {{forloop.counter}}
+                                                            </td>
+                                                            <td>
+                                                              {{fea}}
+                                                            </td>
+                                                            <td>
+                                                              {{freq.0}}
+                                                            </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table">
+                                                    <thead class=" text-primary">
+                                                      <th>
+                                                        ID
+                                                      </th>
+                                                      <th>
+                                                        Feature
+                                                      </th>
+                                                      <th>
+                                                        Frequency
+                                                      </th>
+                                                    </thead>
+                                                    {% for fea, freq in v.1.items %}
+                                                        <tbody>
+                                                            <tr>
+                                                            <td>
+                                                              {{forloop.counter}}
+                                                            </td>
+                                                            <td>
+                                                              {{fea}}
+                                                            </td>
+                                                            <td>
+                                                              {{freq.0}}
+                                                            </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                  {% endfor %}
+                              </div>
+                          </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+          {% endif %}
+        </div>
+
+</div>
+{% endblock %}

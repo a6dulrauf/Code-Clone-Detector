@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+    {% load static %}
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}HOME{% endblock%}</title>
+
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="http://localhost/wordpress/wp-content/themes/academy/js/html5.js"></script>
+    <![endif]-->
+
+	{% block dashboard_imports %}
+	{% endblock %}
+
+    <link rel='dns-prefetch' href='//s.w.org' />
+    <link rel="alternate" type="application/rss+xml" title="test &raquo; Feed" href="feed/" />
+    <link rel="alternate" type="application/rss+xml" title="test &raquo; Comments Feed" href="comments/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="test &raquo; Support Comments Feed" href="contact/feed/" />
+    <link rel='stylesheet' id='wp-block-library-css' href="{% static 'CodeClone/css/style.min.css' %}" type='text/css' media='all' />
+    <link rel='stylesheet' id='general-css' href="{% static 'CodeClone/css/style.css' %}" type='text/css' media='all' />
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery/jquery.js '%}"></script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery/jquery-migrate.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery.hoverIntent.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery.placeholder.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jplayer/jquery.jplayer.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery.themexSlider.js' %}"></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var options = { "templateDirectory": "http:\/\/localhost\/wordpress\/wp-content\/themes\/academy\/" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/jquery.raty.min.js'}"></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var options = { "templateDirectory": "http:\/\/localhost\/wordpress\/wp-content\/themes\/academy\/" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src="{% static 'CodeClone/js/general.js'}"></script>
+    <link rel='https://api.w.org/' href='wp-json/' />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="../xmlrpc.php?rsd" />
+    <meta name="generator" content="WordPress 5.2.3" />
+    <link rel="canonical" href="contact/" />
+    <link rel='shortlink' href='?p=601' />
+
+    <!--<link rel="alternate" type="application/json+oembed" href="../wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2Fwordpress%2Fcontact%2F" />
+    <link rel="alternate" type="text/xml+oembed" href="../wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2Fwordpress%2Fcontact%2F&#038;format=xml" />-->
+
+    <link rel="shortcut icon" href="{% static 'CodeClone/framework/assets/images/favicon.ico'}" />
+    <style type="text/css">
+        .featured-content {
+        }
+
+        body, input, select, textarea {
+        }
+
+        h1, h2, h3, h4, h5, h6, .header-navigation div > ul > li > a, .user-menu a {
+        }
+
+        input[type="submit"], input[type="button"], .element-button, .jp-play-bar, .jp-volume-bar-value, .free-course .course-price .price-text, .lessons-listing .lesson-attachments a, ul.styled-list.style-4 li:before, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt, .woocommerce #respond input#submit.alt, .woocommerce #content input.button.alt, .woocommerce-page a.button.alt, .woocommerce-page button.button.alt, .woocommerce-page input.button.alt, .woocommerce-page #respond input#submit.alt, .woocommerce-page #content input.button.alt, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover, .woocommerce #respond input#submit.alt:hover, .woocommerce #content input.button.alt:hover, .woocommerce-page a.button.alt:hover, .woocommerce-page button.button.alt:hover, .woocommerce-page input.button.alt:hover, .woocommerce-page #respond input#submit.alt:hover, .woocommerce-page #content input.button.alt:hover {
+        }
+
+        .free-course .course-price .corner {
+        }
+
+        .element-button.secondary, .quiz-listing .question-number, .lessons-listing .lesson-title .course-status, .course-price .price-text, .course-price .corner, .course-progress span, .questions-listing .question-replies, .course-price .corner-background, .user-links a:hover, .payment-listing .expanded .toggle-title:before, .styled-list.style-5 li:before, .faq-toggle .toggle-title:before, .lesson-toggle, ul.styled-list.style-1 li:before, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce #respond input#submit, .woocommerce #content input.button, .woocommerce-page a.button, .woocommerce-page button.button, .woocommerce-page input.button, .woocommerce-page #respond input#submit, .woocommerce-page #content input.button, .woocommerce a.button:hover, .woocommerce button.button:hover, .woocommerce input.button:hover, .woocommerce #respond input#submit:hover, .woocommerce #content input.button:hover, .woocommerce-page a.button:hover, .woocommerce-page button.button:hover, .woocommerce-page input.button:hover, .woocommerce-page #respond input#submit:hover, .woocommerce-page #content input.button:hover {
+        }
+
+        a, a:hover, a:focus, ul.styled-list li > a:hover {
+        }
+
+        .element-button.dark, .jp-gui, .jp-controls a, .jp-video-play-icon, .header-wrap, .header-navigation ul ul, .select-menu, .search-form, .mobile-search-form, .login-button .tooltip-text, .footer-wrap, .site-footer:after, .site-header:after, .widget-title {
+        }
+
+        .jp-jplayer {
+        }
+
+        .widget-title {
+        }
+
+        ::-moz-selection {
+        }
+
+        ::selection {
+        }
+    </style>
+    <style type="text/css">
+        @font-face {
+            font-family: "Crete Round";
+            src: url("fonts/creteround-regular-webfont.eot");
+            src: url("fonts/creteround-regular-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/creteround-regular-webfont.woff") format("woff"), url("fonts/creteround-regular-webfont.ttf") format("truetype"), url("fonts/creteround-regular-webfont.svg#crete_roundregular") format("svg");
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+    <script type="text/javascript">
+        WebFontConfig = { google: { families: ["Open Sans:400,400italic,600"] } };
+        (function () {
+            var wf = document.createElement("script");
+            wf.src = ("https:" == document.location.protocol ? "https" : "http") + "://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js";
+            wf.type = "text/javascript";
+            wf.async = "true";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+</head>
+
+<body class="page-template-default page page-id-601">
+	<div class="site-wrap">
+		<div class="header-wrap">
+			<header class="site-header">
+				<div class="row">
+					<div class="site-logo left">
+						<a href="#" rel="home">
+							<img src="{% static 'CodeClone/images/logo.png'}" alt="KODE TUNER" />
+						</a>
+					</div>
+					<!-- /logo -->
+					<div class="header-options right clearfix">
+						<div class="login-options right">
+
+							<div class="button-wrap left tooltip login-button">
+								<a href="{% url 'login' %}" class="element-button dark">
+									<span class="button-icon login"></span>
+									Sign In
+								</a>
+								<div class="tooltip-wrap">
+									<div class="tooltip-text">
+										<form action="#" class="ajax-form popup-form" method="POST">
+											<div class="message"></div>
+											<div class="field-wrap">
+												<input type="text" name="user_login" value="Username" />
+											</div>
+											<div class="field-wrap">
+												<input type="password" name="user_password" value="Password" />
+											</div>
+											<div class="button-wrap left nomargin">
+												<a href="" class="element-button submit-button">Sign In</a>
+											</div>
+											<div class="button-wrap switch-button left">
+												<a href="#" class="element-button dark" title="Password Recovery">
+													<span class="button-icon help"></span>
+												</a>
+											</div>
+											<input type="hidden" name="user_action" value="login_user" />
+											<input type="hidden" name="user_redirect" value="" />
+											<input type="hidden" name="nonce" class="nonce" value="7406f7ee0c" />
+											<input type="hidden" name="action" class="action" value="themex_update_user" />
+										</form>
+									</div>
+								</div>
+								<div class="tooltip-wrap password-form">
+									<div class="tooltip-text">
+										<form action="#" class="ajax-form popup-form" method="POST">
+											<div class="message"></div>
+											<div class="field-wrap">
+												<input type="text" name="user_email" value="Email" />
+											</div>
+											<div class="button-wrap left nomargin">
+												<a href="#" class="element-button submit-button">Reset Password</a>
+											</div>
+											<input type="hidden" name="user_action" value="reset_password" />
+											<input type="hidden" name="nonce" class="nonce" value="7406f7ee0c" />
+											<input type="hidden" name="action" class="action" value="themex_update_user" />
+										</form>
+									</div>
+								</div>
+							</div>
+                            <div class="button-wrap left">
+								<a href="{% url 'signup' %}" class="element-button">
+                                    <span class="button-icon register"></span>Register</a>
+							</div>
+                        </div>
+						<!-- /login options -->
+						<div class="search-form right">
+							<form role="search" method="GET" action="/">
+	                            <input type="text" placeholder="Search" value="" name="s"/>
+                            </form>
+                        </div>
+						<!-- /search form -->
+					</div>
+					<!-- /header options -->
+					<div class="mobile-search-form">
+						<form role="search" method="GET" action="/">
+	                        <input type="text" value="" name="s" />
+                        </form>
+                    </div>
+					<!-- /mobile search form -->
+					<nav class="header-navigation right">
+						<div class="menu">
+                            <ul>
+                                <li class="page_item page-item-183"><a href="{% url 'index' %}">Home</a></li>
+                                <li class="page_item page-item-2113"><a href="{% url 'dashboard'  %}">Dashboard</a></li>
+                                <li class="page_item page-item-2112"><a href="#">About</a></li>
+                            </ul>
+                        </div>
+						<!--/ select menu-->
+					</nav>
+					<!-- /navigation -->
+				</div>
+			</header>
+			<!-- /header -->
+		</div>
+		<div class="main-content">
+			{% block body %}
+			{% endblock %}
+		</div>
+			<div class="footer-wrap">
+				<footer class="site-footer">
+					<div class="row">
+						<div class="copyright left">
+							Generics Team &copy; 2019
+						</div>
+						<nav class="footer-navigation right">
+							<div class="menu">
+                                <ul>
+                                    <li class="page_item page-item-183"><a href="#">Home</a></li>
+                                    <li class="page_item page-item-2113"><a href="#">About</a></li>
+                                    <li class="page_item page-item-2112"><a href="#">Contact</a></li>
+                                </ul>
+                            </div>
+						</nav>
+						<!-- /navigation -->
+					</div>
+				</footer>
+			</div>
+			<!-- /footer -->
+		</div>
+		<!-- /site wrap -->
+	<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=false&#038;ver=5.2.3'></script>
+	</body>
+</html>
