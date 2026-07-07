@@ -13,26 +13,22 @@ class Directory:
     
     @staticmethod
     def path(target_dir):
-        dirs = None
         current_dir = os.getcwd()
         if current_dir.find('gui') != -1:
-            dirs = current_dir.replace('gui', f'{target_dir}\\')
-        else:
-            dirs = f"{target_dir}\\"
-        
-        return dirs
+            return os.path.join(current_dir.replace('gui', target_dir), '')
+        return os.path.join(target_dir, '')
 
     @staticmethod
     def get_directory_of(path):
-        path = os.path.join(os.path.realpath(path) + "\\")
+        path = os.path.realpath(path) + os.sep
         if not os.path.exists(path):
-            os.makedirs(path)
+            os.makedirs(path, exist_ok=True)
         return path
 
     @staticmethod
     def delete_dir(dir):
         print(dir)
-        path = os.path.join(os.path.realpath(dir) + "\\")
+        path = os.path.realpath(dir)
         try:
             shutil.rmtree(path)
         except Exception as e:
