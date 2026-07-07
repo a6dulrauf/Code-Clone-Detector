@@ -64,7 +64,7 @@ class Plagiarism_Tester:
             feature=Features.features
         #feature=Features.features
         #print(feature)
-        dataset_dir = Directory.path(str('datasets'))
+        dataset_dir = Directory.get_directory_of('datasets')
         dataset_handler.generate_csv([self.ds1_name,self.ds2_name],data_frames,features=feature,address =dataset_dir)#='C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\datasets\\')
         '''
         '''
