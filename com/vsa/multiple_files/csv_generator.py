@@ -59,7 +59,6 @@ class CSVGenerator:
         dataset_handler = DatasetHandler()
         #print(dirs)
         name = [os.path.basename(x) for x in dirs if x.strip()]
-        print(name)
         dfs=dataset_handler.read_csv(file_name=name, address=path)
         
         values = {}
