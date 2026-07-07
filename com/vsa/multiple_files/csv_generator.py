@@ -4,6 +4,7 @@ Created on Tue Sep 24 23:53:07 2019
 
 @author: Syed Hassan Ali
 """
+import os
 import pandas as pd
 from com.vsa.dataset_handler.dataset_handler import DatasetHandler
 from com.vsa.metrics.ngram_metrics import NGram_Metrics
@@ -33,11 +34,10 @@ class CSVGenerator:
 
         for path in file_path:
             if len(path.strip()) > 0:
-                p = path.replace('/', '\\')
-                datasets.append(metrics.run(p))
-                name = p.split('\\')[len(p.split('\\'))-1].replace('.java', '.csv')
+                datasets.append(metrics.run(path))
+                name = os.path.basename(path).replace('.java', '.csv')
                 if name.strip() != "":
-                    filenames.append(name)#f.replace('.java','.csv'))
+                    filenames.append(name)
 
             #filenames=['a.csv','b.csv','d.csv','c.csv','e.csv']
 
@@ -58,7 +58,7 @@ class CSVGenerator:
         dirs = Directory.search_directories(path, '.csv')
         dataset_handler = DatasetHandler()
         #print(dirs)
-        name = [x.split('\\')[len(x.split('\\'))-1] for x in dirs]
+        name = [os.path.basename(x) for x in dirs if x.strip()]
         print(name)
         dfs=dataset_handler.read_csv(file_name=name, address=path)
         
