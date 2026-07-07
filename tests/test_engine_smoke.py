@@ -19,3 +19,6 @@ def test_halstead_operators_path_is_module_relative():
     ops = os.path.join(os.path.dirname(os.path.abspath(hm_mod.__file__)),
                        '..', 'elements', 'operators')
     assert os.path.exists(ops)
+    with open(ops) as f:
+        tokens = [line.strip() for line in f if line.strip()]
+    assert 'for' in tokens and 'int' in tokens
