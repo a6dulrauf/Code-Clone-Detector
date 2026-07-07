@@ -25,7 +25,7 @@ class DatasetHandler:
        
         for df in self.data_frame:
             for key in df.keys():
-               df[key].replace(to_replace=math.nan,value=df[key].mean(),inplace=True)
+               df[key] = df[key].replace(to_replace=math.nan,value=df[key].mean())
            
         #self.pre_process_ds=self.data_frame
         
