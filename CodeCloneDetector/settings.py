@@ -82,12 +82,8 @@ WSGI_APPLICATION = 'CodeCloneDetector.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'CodeCloneDetector_DB',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'Localhost', # Or an IP Address that your DB is hosted on
-        'PORT': '3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
