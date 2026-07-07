@@ -11,3 +11,10 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Generated runtime data
+var/
+projects/
+com/vsa/datasets/
+staticfiles/
+*.csv
