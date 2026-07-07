@@ -5,12 +5,15 @@ Created on Sat Aug  3 01:27:25 2019
 @author: Syed Hassan Ali
 """
 
+import os
 import time as t
 
 from tkinter import *
 
 from tkinter import ttk
 from PIL import ImageTk,Image
+
+IMAGES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
 
 
 from com.vsa.gui.libraries import tktable
@@ -66,7 +69,7 @@ class GUI:
         '''
         place logo
         '''
-        self.place_image(master = self.left_top_imgframe , path = 'C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\gui\\images\\logo.png')
+        self.place_image(master = self.left_top_imgframe , path = os.path.join(IMAGES_DIR, 'logo.png'))
         self.main_heading(self.left_top_imgframe)
         self.create_tester_gui()
         self.create_chart_window_gui()
@@ -106,7 +109,7 @@ class GUI:
             opImage=Image.open(path)
             #opImage.resize=((0.1,0.1),Image.ANTIALIAS)
             #opImage.resize((pixels_x, pixels_y)
-            canvas.image = ImageTk.PhotoImage(opImage.resize((150,80),Image.ANTIALIAS))
+            canvas.image = ImageTk.PhotoImage(opImage.resize((150,80),Image.LANCZOS))
             canvas.create_image(0,0, image=canvas.image, anchor='nw')
             #label=Label(master=master,image=img)
             #label.image=img
@@ -486,9 +489,9 @@ class GUI:
        self.thread=CustomThread()
        #self.thread.start()
        
-       f1='C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\project1\\'
-       
-       f2='C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\project2\\'
+       f1=Directory.get_directory_of('com/vsa/datasets/project1')
+
+       f2=Directory.get_directory_of('com/vsa/datasets/project2')
 
        self.test(f1,f2)
        self.thread.stop()
@@ -594,12 +597,12 @@ class GUI:
         CSVGenerator.generate_multiples_csv(filepath1,metrics)
         CSVGenerator.generate_multiples_csv(filepath2,metrics, project_no=2)
         
-        CSVGenerator.merge_all_csvs('C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\')
-        CSVGenerator.merge_all_csvs('C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\',project_no=2)
-        
+        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets'))
+        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets'),project_no=2)
+
         self.tester = Plagiarism_Tester()
-        df1 = dataset_handler.read_csv(file_name = ['project1.csv'] ,address = 'C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\project1\\')
-        df2 = dataset_handler.read_csv(file_name = ['project2.csv'] ,address = 'C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\project2\\')
+        df1 = dataset_handler.read_csv(file_name = ['project1.csv'] ,address = Directory.get_directory_of('com/vsa/datasets/project1'))
+        df2 = dataset_handler.read_csv(file_name = ['project2.csv'] ,address = Directory.get_directory_of('com/vsa/datasets/project2'))
         
         #print(df1[0].values[0])
 
