@@ -61,14 +61,12 @@ class DatasetHandler:
     def read_csv(self, file_name, address='datasets\\'):
         pre_process_ds=[]
 
-        print('No of files:', len(file_name))
         try:
             
             for i in range(0,len(file_name)):
                 if len(file_name[i].strip())>0:
                     df = pd.read_csv(address+str(file_name[i]))
                     pre_process_ds.append(df)
-                    print(address + str(file_name[i]))
         except Exception as e:
             print(e)
         return pre_process_ds
