@@ -1,6 +1,7 @@
 from com.vsa.elements.Operators import Operators as op
 from com.vsa.elements.Operands import Operands as oprn
 
+import os
 import sys
 from math import log2
 class HalsteadMetrics:
@@ -61,7 +62,7 @@ class HalsteadMetrics:
             self._operators[str(key)]+=1
     
     def readFile(self):
-        if self.file_path is not '':
+        if self.file_path != '':
             try:    
                 with open(self.file_path,'r') as file:
                     return file.readlines()
@@ -98,7 +99,8 @@ class HalsteadMetrics:
         if(len(sys.argv) != 2):
             print("Usage: python3 halstead.py name_of_program")
         '''
-        operatorsFileName = 'C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\elements\\operators'
+        operatorsFileName = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), '..', 'elements', 'operators')
         programFileName = programFileName
         
         operators = {}
