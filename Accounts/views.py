@@ -60,8 +60,6 @@ def login_user(request):
         else:
             messages.error(request, 'Invalid Credentials !')
 
-        return render(request, "Accounts/login_form.html", {"demo_hint": demo_hint})
-
     return render(request, "Accounts/login_form.html", {"demo_hint": demo_hint})
 
 def logout_user(request):

@@ -32,7 +32,7 @@ class DatasetHandler:
         return self.data_frame
     
     
-    def generate_csv(self, file_name, data_frames, address='datasets\\', features=[]):
+    def generate_csv(self, file_name, data_frames, address='datasets/', features=[]):
         
         features_dict = {}
         
@@ -58,7 +58,7 @@ class DatasetHandler:
         except Exception as e:
             print(e)
     
-    def read_csv(self, file_name, address='datasets\\'):
+    def read_csv(self, file_name, address='datasets/'):
         pre_process_ds=[]
 
         try:
