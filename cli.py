@@ -11,7 +11,9 @@ from com.vsa.metrics.ngram_metrics import NGram_Metrics
 from com.vsa.plagiarism_techniques.cosine_distance import CosineDistance
 
 SAMPLES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "samples")
-CLONE_THRESHOLD = 0.80
+# Structural n-gram similarity runs high for same-language code; true near-
+# duplicates score ~0.98-1.0 while merely-similar code sits below ~0.92.
+CLONE_THRESHOLD = 0.95
 
 
 def compare_files(path_a, path_b, ngram=2):
