@@ -1,220 +1,107 @@
-{% extends 'CodeClone/dashboard_base.html'%}
+{% extends 'CodeClone/dashboard_base.html' %}
 
-{% block title %} USER PANEL {% endblock %}
-
-{% block css %}
-<style>
-.table-wrapper {
-  max-height: 530px;
-  overflow: auto;
-  display:inline-block;
-}
-
-.custom-file-input:lang(en) ~ .custom-file-label::after {
-  content: 'Choose Project';
-}
-
-
-</style>
-{% endblock %}
+{% block title %}Compare{% endblock %}
+{% block heading %}Compare{% endblock %}
 
 {% block dashboard_content %}
+<div class="stack" style="max-width:920px">
 
-<div>
-    <div class="row">
-      <div class="col">
-          <div class="d-flex justify-content-center">
-              <h2 class="text-uppercase font-weight-bold text-danger"> PROJECT FEATURES AND PLAGIARISM </h2>
-          </div>
-      </div>
+  {% for message in messages %}
+    <div class="msg msg--error">{{ message }}</div>
+  {% endfor %}
+
+  <div>
+    <span class="eyebrow">Project comparison</span>
+    <h2 style="margin:.3rem 0 .2rem">Detect clones between two projects</h2>
+    <p class="muted" style="margin:0">Upload two folders of <code class="mono">.java</code> files, or just run it on the pre-loaded demo project — no upload needed.</p>
   </div>
 
-    <div class="row d-flex">
-      <div class="col">
-          <form class="form" id="form_project" action="{% url 'project-features' %}" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <!---{{form.as_p}}-->
-              <div class="file-field">
-                  <div class="btn btn-primary">
-                      <span for="upload_project1">UPLOAD PROJECT 1</span>
-                      <input id="upload_project1" type="file" name="project1" multiple="true" webkitdirectory="true" directory = "true"/>
-                  </div>
-                  <div class="btn btn-primary">
-                      <span for="upload_project2">UPLOAD PROJECT 2</span>
-                      <input id="upload_project2" type="file" name="project2" multiple="true" webkitdirectory="true" directory = "true"/>
-                  </div>
-                  <div class="btn btn-primary">
-                      <span>Select NGRAM value</span>
-                      <input type="number" value="1" name="nGramRange" min="1" max="3" placeholder="Enter Ngram Metrics Range"/>
-                  </div>
-              </div>
-              <button class="btn btn-danger" id="test_plagiarism" name="test_plagiarism">TEST PLAGIARISM</button>
-          </form>
+  <form class="card card__pad" id="form_project" action="{% url 'project-features' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="run-grid">
+      <div>
+        <label class="field-label" for="upload_project1">Project 1 folder</label>
+        <input id="upload_project1" type="file" name="project1" multiple webkitdirectory directory class="input">
       </div>
-  </div>
+      <div>
+        <label class="field-label" for="upload_project2">Project 2 folder</label>
+        <input id="upload_project2" type="file" name="project2" multiple webkitdirectory directory class="input">
+      </div>
+      <div style="max-width:130px">
+        <label class="field-label" for="nGramRange">n-gram</label>
+        <input id="nGramRange" type="number" name="nGramRange" value="2" min="1" max="3" class="input">
+      </div>
+    </div>
+    <button class="btn btn--primary btn--lg" id="test_plagiarism" name="test_plagiarism" type="submit" style="margin-top:1.1rem">Run comparison</button>
+  </form>
 
-    <div class="row">
-      <div class="col d-flex justify-content-center">
-          {% if model.result %}
-            <h1>Result : {{ model.result}} %</h1>
-          {% endif %}
-      </div>
-  </div>
-
-    <hr>
-
-    <div class="row">
-      <div class="col">
-          <div class="card">
-              <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Project 1</h4>
-                  <p class="card-category">Project Features</p>
-              </div>
-              <div class="card-body">
-                  <div class="table-responsive table-wrapper">
-                      <table class="table">
-                          <thead class=" text-primary">
-                          <th>
-                                ID
-                            </th>
-                          <th>
-                                Feature
-                            </th>
-                          <th>
-                                Frequency
-                            </th>
-                          </thead>
-                          <tbody>
-                          {% if model.result %}
-                            {% for feature, freq in model.features1.items %}
-                            <tr>
-                              <td>
-                                {{forloop.count}}
-                              </td>
-                              <td>
-                                {{feature}}
-                              </td>
-                              <td>
-                                {{freq.0}}
-                              </td>
-                            </tr>
-                            {% endfor %}
-                          {% endif %}
-                          </tbody>
-                    </table>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col">
-          <div class="card">
-              <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Project 2</h4>
-                  <p class="card-category">Project Features</p>
-                </div>
-              <div class="card-body">
-                  <div class="table-responsive table-wrapper">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          ID
-                        </th>
-                        <th>
-                          Feature
-                        </th>
-                        <th>
-                          Frequency
-                        </th>
-                      </thead>
-                      <tbody>
-                        {% if model.result %}
-                            {% for feature, freq in model.features2.items %}
-                            <tr>
-                              <td>
-                                {{forloop.count}}
-                              </td>
-                              <td>
-                                {{feature}}
-                              </td>
-                              <td>
-                                {{freq.0}}
-                              </td>
-                            </tr>
-                            {% endfor %}
-                        {% endif %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-          </div>
-      </div>
-  </div>
-</div>
-
-<!-- Modal : Popup -->
-<div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Subscribe</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-            <form id="form_modal" class="form" method="" action="" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label class="text-uppercase font-weight-bold"><span class="fa fa-user prefix grey-text"></span>Email</label>
-                <input id="modal_username" type="email" class="form-control" placeholder="Enter Your Email" required/>
-                <label class="text-uppercase font-weight-bold"><span class="fa fa-envelope prefix grey-text"></span>Password</label>
-                <input id="modal_email" type="password"class="form-control validate" placeholder="Enter Your Password" required/>
-            </form>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="submit" id="submit_user" class="btn btn-indigo">Send<span class="fa fa-paper-plane-o ml-1"></span></button>
-            </div>
+  {% if model.result %}
+  <div class="card card__pad">
+    <div class="meter" data-score="{{ model.result }}" style="--val:0">
+      <div class="meter__top">
+        <div>
+          <span class="eyebrow">Structural similarity</span>
+          <div class="meter__score">{{ model.result }}<small>%</small></div>
         </div>
+        {% if model.result >= 95 %}
+          <span class="verdict verdict--clone">Likely clone</span>
+        {% else %}
+          <span class="verdict verdict--distinct">Not a clone</span>
+        {% endif %}
+      </div>
+      <div class="meter__track"><div class="meter__fill"></div></div>
+      <div class="meter__scale"><span>0%</span><span>clone threshold 95%</span><span>100%</span></div>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="card">
+      <div class="card__pad" style="padding-bottom:.6rem"><h3 style="margin:0">Project 1 features</h3></div>
+      <div class="tablewrap">
+        <table class="ftable">
+          <thead><tr><th>#</th><th>Feature</th><th>Freq</th></tr></thead>
+          <tbody>
+            {% for feature, freq in model.features1.items %}
+            <tr><td class="muted">{{ forloop.counter }}</td><td class="feat">{{ feature }}</td><td class="mono">{{ freq.0 }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__pad" style="padding-bottom:.6rem"><h3 style="margin:0">Project 2 features</h3></div>
+      <div class="tablewrap">
+        <table class="ftable">
+          <thead><tr><th>#</th><th>Feature</th><th>Freq</th></tr></thead>
+          <tbody>
+            {% for feature, freq in model.features2.items %}
+            <tr><td class="muted">{{ forloop.counter }}</td><td class="feat">{{ feature }}</td><td class="mono">{{ freq.0 }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
-<!--Modal : Popup-->
+  {% endif %}
 
+</div>
+{% endblock %}
+
+{% block css %}
+<style>
+  .run-grid { display:grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items:end; }
+  .feat-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  input[type=file].input { padding:.6rem; font-family: var(--mono); font-size:.82rem; }
+  @media (max-width: 720px){ .run-grid, .feat-grid { grid-template-columns: 1fr; } }
+</style>
 {% endblock %}
 
 {% block script %}
 <script>
-
-
-<!--    $(document).ready(function() {-->
-<!--        var project_form = $('#form_project')-->
-<!--        var modal_form = $('#form_modal')-->
-<!--        $('#test_plagiarism').click(function () {-->
-<!--            if(project_form[0].checkValidity()){-->
-<!--                $("#modalSubscriptionForm").modal();-->
-<!--            }else{-->
-<!--                project_form[0].reportValidity();-->
-<!--            }-->
-<!--        });-->
-
-<!--        $('#submit_user').click(function () {-->
-
-<!--            if(modal_form[0].checkValidity()){-->
-<!--                $("#modalSubscriptionForm").modal('hide');-->
-<!--                var name = $("#modal_username").val();-->
-<!--                var email = $("#modal_email").val();-->
-<!--                $('#user_name').val(name);-->
-<!--                $('#user_email').val(email);-->
-
-<!--                project_form[0].submit();-->
-
-<!--            }else{-->
-<!--                modal_form[0].reportValidity();-->
-<!--            }-->
-<!--        });-->
-
-<!--    });-->
-
-
+  // Animate the match meter on load (respects reduced-motion via CSS).
+  window.addEventListener('DOMContentLoaded', function () {
+    var m = document.querySelector('.meter[data-score]');
+    if (m) { requestAnimationFrame(function () { m.style.setProperty('--val', m.dataset.score); }); }
+  });
 </script>
 {% endblock %}
