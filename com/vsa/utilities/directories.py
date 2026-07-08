@@ -21,8 +21,7 @@ class Directory:
     @staticmethod
     def get_directory_of(path):
         path = os.path.realpath(path) + os.sep
-        if not os.path.exists(path):
-            os.makedirs(path, exist_ok=True)
+        os.makedirs(path, exist_ok=True)
         return path
 
     @staticmethod
