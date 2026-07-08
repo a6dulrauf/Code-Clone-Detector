@@ -1,6 +1,8 @@
 
 # Create your views here.
 
+import os
+
 from django.shortcuts import render, redirect
 from CodeClone.forms import UserForm
 from django.contrib.auth.models import User
@@ -43,6 +45,7 @@ def signup_user(request):
     return render(request, "Accounts/registration_form.html", {'form': form_view})
 
 def login_user(request):
+    demo_hint = os.environ.get("DEMO_HINT", "True") == "True"
     if request.method == 'POST':
         username = request.POST['login_username']
         password = request.POST['login_password']
@@ -57,7 +60,9 @@ def login_user(request):
         else:
             messages.error(request, 'Invalid Credentials !')
 
-    return render(request, "Accounts/login_form.html")
+        return render(request, "Accounts/login_form.html", {"demo_hint": demo_hint})
+
+    return render(request, "Accounts/login_form.html", {"demo_hint": demo_hint})
 
 def logout_user(request):
     logout(request)
