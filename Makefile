@@ -1,13 +1,15 @@
 VENV=.venv
 PY=$(VENV)/bin/python
 PIP=$(VENV)/bin/pip
+PRECOMMIT=$(VENV)/bin/pre-commit
 
-.PHONY: setup web cli demo desktop test docker
+.PHONY: setup web cli demo desktop test docker hooks scan
 
 setup:
 	python3 -m venv $(VENV)
 	$(PIP) install -r requirements.txt -r requirements-dev.txt
 	$(PY) -m nltk.downloader -d $(VENV)/nltk_data punkt punkt_tab
+	$(PRECOMMIT) install
 	$(PY) manage.py migrate
 	$(PY) manage.py seed_demo
 
@@ -29,3 +31,9 @@ test:
 
 docker:
 	docker build -t ccd-web . && docker run --rm -e PORT=8000 -e ALLOWED_HOSTS=localhost,127.0.0.1 -p 8000:8000 ccd-web
+
+hooks:
+	$(PRECOMMIT) install
+
+scan:
+	$(PRECOMMIT) run gitleaks --all-files

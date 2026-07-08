@@ -126,11 +126,12 @@ behind that number.
 ## Run it locally
 
 ```bash
-make setup   # creates .venv, installs deps, downloads nltk data, migrates DB, seeds demo user
+make setup   # creates .venv, installs deps, downloads nltk data, installs git hooks, migrates DB, seeds demo user
 make web     # Django dev server at http://127.0.0.1:8000
 make demo    # CLI demo on bundled samples
 make cli ARGS="compare samples/Original.java samples/NearClone.java"
 make desktop # Tkinter GUI
+make scan    # scan the whole tree for secrets on demand
 ```
 
 Notes:
@@ -139,6 +140,13 @@ Notes:
 - `make desktop` needs a system Tk install. On macOS, use a python.org build of
   Python (bundles Tk) or `brew install python-tk`; the Homebrew/pyenv default
   build often ships without Tk support.
+
+### Secret scanning
+
+A [gitleaks](https://github.com/gitleaks/gitleaks) pre-commit hook scans every
+staged diff and blocks the commit if a secret is detected. `make setup` installs
+it automatically; on an existing clone run `make hooks` once (needs
+`pip install pre-commit`). Scan the full tree any time with `make scan`.
 
 ## Tech stack
 
