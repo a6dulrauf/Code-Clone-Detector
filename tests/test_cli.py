@@ -12,6 +12,10 @@ def test_compare_files_returns_score():
                           os.path.join(ROOT, "samples", "NearClone.java"))
     assert 0.0 <= s <= 1.0
 
+    unrelated = cli.compare_files(os.path.join(ROOT, "samples", "Original.java"),
+                                  os.path.join(ROOT, "samples", "Unrelated.java"))
+    assert s >= unrelated
+
 
 def test_demo_subcommand_runs():
     result = subprocess.run([sys.executable, "cli.py", "demo"],

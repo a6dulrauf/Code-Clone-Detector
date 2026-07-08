@@ -9,6 +9,7 @@ from tkinter import *
 from com.vsa.projects_cloning.internal_clone.internal_clone import InternalClone
 from com.vsa.utilities.helper import Helper
 from com.vsa.plagiarism_techniques.cosine_distance import CosineDistance
+from com.vsa.utilities.directories import Directory
 from tkinter import ttk
 from com.vsa.gui.scroll_frame.scroll_frame import ScrollFrame
 
@@ -94,9 +95,9 @@ class InternalCloneGUI:
     def test_internal_clone(self,master):
         path = None
         if self.project_no == 1:
-            path = 'C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\multiple_csv_project1\\'
+            path = Directory.get_directory_of('com/vsa/datasets/multiple_csv_project1')
         elif self.project_no ==2:
-            path = 'C:\\Users\ACE\\PycharmProjects\\CodeCloneDetector\\com\\vsa\\datasets\\multiple_csv_project2\\'
+            path = Directory.get_directory_of('com/vsa/datasets/multiple_csv_project2')
             
         result_dict = self.internalClone.test_internal_clone(path,CosineDistance())
         i = 0

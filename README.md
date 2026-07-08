@@ -16,7 +16,7 @@ Render URL after deploying.*
 - Render's free tier spins down when idle — the first request after a while can
   take **~30-50 seconds** to wake up. Subsequent requests are fast.
 
-**Deploy your own (one click):** connect this repo in the Render dashboard and
+**Deploy your own (a few clicks):** connect this repo in the Render dashboard and
 pick "New from Blueprint" — Render reads [`render.yaml`](render.yaml) and
 provisions the web service (Docker runtime, env vars, generated `SECRET_KEY`)
 automatically.
@@ -113,12 +113,12 @@ This measures **structural** similarity, not semantic equivalence — two
 files in the *same language* will always score high in absolute terms, because
 much of their token structure (braces, keywords, common control flow) overlaps
 regardless of what the program does. In practice the useful signal is the
-**relative ordering**, not the raw percentage: true near-duplicates
-(renamed identifiers, reformatted code) land around **98-100%**, while
-merely-similar-but-distinct code tops out around **90-92%**. The tool flags
-anything at or above a **0.95** similarity threshold as a likely clone — see
-the comment on `CLONE_THRESHOLD` in [`cli.py`](cli.py) for the measured
-distribution behind that number.
+**relative ordering**, not the raw percentage: in this demo, a near-clone
+scores **~100%** while unrelated code scores **~90%**, so the **0.95**
+similarity threshold cleanly separates them. The tool flags anything at or
+above that threshold as a likely clone — see the comment on
+`CLONE_THRESHOLD` in [`cli.py`](cli.py) for the measured distribution
+behind that number.
 
 ## Run it locally
 

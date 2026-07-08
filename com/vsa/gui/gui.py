@@ -53,7 +53,6 @@ class GUI:
         #plot.plot_pie(data=[1,2,3,4],labels=['A','B','C','D'],master=self.bottomframe)      
         #self.create_tester_gui()
         #self.create_menubar()
-        #self.place_image(self.root, path = 'C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\gui\\images\\background1.jpg')
         self.mainFrame.configure(background='gray')
         
         self.root.attributes('-alpha',1)
@@ -94,8 +93,7 @@ class GUI:
         #self.bottomframe.pack(side=LEFT,fill=BOTH,padx=5,expand=1)
         
         self.rightframe.pack(side=RIGHT,fill=BOTH,expand=1)
-        #self.place_image(self.root,path='C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\gui\\images\\background1.jpg')
-    
+
     def main_heading(self,master):
         main_headinglabel=Label(master,text="CODE CLONE DETECTOR",font=(Helper.fontstyle,Helper.mainheading_label_size))
         font=(Helper.fontstyle,Helper.headingfontsize)
@@ -562,9 +560,6 @@ class GUI:
          #if self.cosineTech:
         #    techStr='Cosine'
         techStr='cosine'
-        #filepath1='C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\sample_resource\\Main.java'
-        #filepath2='C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\sample_resource\\MDP.java'
-        
         filepath1=self.eventhandler.path1
         filepath2=self.eventhandler.path2
         #filepath1=path1
