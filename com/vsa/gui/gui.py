@@ -41,7 +41,7 @@ class GUI:
         self.root=Tk()
         self.root.geometry('1024x600')
         self.root.resizable(1,1)
-        self.root.title('Code Cloner')
+        self.root.title('Code Clone Detector')
         self.mainFrame=Frame(self.root)
         
         self.mainFrame.pack(expand=YES,fill=BOTH,pady=5)
@@ -97,7 +97,7 @@ class GUI:
         #self.place_image(self.root,path='C:\\Users\\Syed Hassan Ali\\Desktop\\VSA-Project\\VSA_Project-master\\com\\vsa\\gui\\images\\background1.jpg')
     
     def main_heading(self,master):
-        main_headinglabel=Label(master,text="CODE CLONER",font=(Helper.fontstyle,Helper.mainheading_label_size))
+        main_headinglabel=Label(master,text="CODE CLONE DETECTOR",font=(Helper.fontstyle,Helper.mainheading_label_size))
         font=(Helper.fontstyle,Helper.headingfontsize)
         main_headinglabel.pack(side=LEFT,expand=1,fill=Y)
         
