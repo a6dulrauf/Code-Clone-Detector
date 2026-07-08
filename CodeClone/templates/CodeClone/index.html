@@ -1,23 +1,100 @@
-{% extends 'CodeClone/base.html'%}
-
-{% block title %} Code Clone Detector {% endblock %}
+{% extends 'CodeClone/base.html' %}
 {% load static %}
-{% block body%}
-<div>
-    <div class="featured-content">
-            <div class="row">
-                <div class="text-center">
-                    <h1>TEST PLAGIARISM BETWEEN YOUR PROJECTS</h1>
-                </div>
-                <div class="text-center">
-                <a class="element-button" href="{% url 'dashboard'  %}">CHECK PLAGIARISM</a>
-                </div>
-                <!-- /page title -->
-            </div>
-    </div>
-    <div style="background-image: url({% static 'CodeClone/images/bgs/kodeBg.jpg' %});">
-        <img src="{% static 'CodeClone/images/bgs/kodeBg.jpg' %}" style="" alt="Background-Image">
-    </div>
-</div>
 
+{% block title %}Code Clone Detector — find near-duplicate code{% endblock %}
+
+{% block body %}
+<section class="hero">
+  <div class="container hero__grid">
+    <div>
+      <span class="eyebrow">n-grams · Halstead metrics · cosine similarity</span>
+      <h1>Find the clones<br>hiding in your code.</h1>
+      <p class="hero__lede">Compare two projects token-by-token and get a single, honest
+        similarity score — from a CLI, a desktop app, or the web.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="{% url 'dashboard' %}">Try the live demo</a>
+        <a class="btn btn--ghost btn--lg" href="#how">How it works</a>
+      </div>
+    </div>
+
+    <div class="compare" aria-hidden="true">
+      <div class="codepane">
+        <span class="codepane__name">Original.java</span>
+        <span class="k">public class</span> Calculator {<br>
+        &nbsp;&nbsp;<span class="k">int</span> add(<span class="k">int</span> a, <span class="k">int</span> b){ <span class="k">return</span> a + b; }<br>
+        &nbsp;&nbsp;<span class="k">int</span> sub(<span class="k">int</span> a, <span class="k">int</span> b){ <span class="k">return</span> a - b; }<br>
+        }
+      </div>
+      <div class="compare__link"><span>&#8776;</span></div>
+      <div class="codepane">
+        <span class="codepane__name">NearClone.java</span>
+        <span class="k">public class</span> MathHelper {<br>
+        &nbsp;&nbsp;<span class="k">int</span> plus(<span class="k">int</span> x, <span class="k">int</span> y){ <span class="k">return</span> x + y; }<br>
+        &nbsp;&nbsp;<span class="k">int</span> minus(<span class="k">int</span> x, <span class="k">int</span> y){ <span class="k">return</span> x - y; }<br>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="margin-top:2rem">
+    <div class="card card__pad meter" data-score="100" style="--val:0; max-width:560px">
+      <div class="meter__top">
+        <div><span class="eyebrow">Renamed identifiers, same structure</span>
+          <div class="meter__score">100<small>%</small></div></div>
+        <span class="verdict verdict--clone">Likely clone</span>
+      </div>
+      <div class="meter__track"><div class="meter__fill"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="container">
+    <span class="eyebrow">How it works</span>
+    <h2 style="margin:.3rem 0 1.6rem">Three steps, one score</h2>
+    <div class="steps">
+      <div class="step"><div class="step__n"></div>
+        <h3>Tokenize</h3>
+        <p>Each source file is reduced to a stream of structural tokens — keywords, operators, and operands — stripping away names.</p></div>
+      <div class="step"><div class="step__n"></div>
+        <h3>Vectorize</h3>
+        <p>Those tokens become n-gram frequency vectors alongside Halstead software-science metrics.</p></div>
+      <div class="step"><div class="step__n"></div>
+        <h3>Score</h3>
+        <p>Cosine similarity compares the two vectors into one number; anything at or above 95% is flagged as a likely clone.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <span class="eyebrow">Three ways to run it</span>
+    <h2 style="margin:.3rem 0 1.6rem">Same engine, your choice of surface</h2>
+    <div class="ways">
+      <div class="way"><div class="way__tag">CLI</div>
+        <h3>Terminal</h3>
+        <p class="muted" style="font-size:.92rem">Compare two files or two projects, or run the bundled demo.</p>
+        <code>make cli ARGS="compare a.java b.java"</code></div>
+      <div class="way"><div class="way__tag">DESKTOP</div>
+        <h3>Tkinter app</h3>
+        <p class="muted" style="font-size:.92rem">Browse to two folders and compare interactively, with metric plots.</p>
+        <code>make desktop</code></div>
+      <div class="way"><div class="way__tag">WEB</div>
+        <h3>This app</h3>
+        <p class="muted" style="font-size:.92rem">Sign in and compare projects in the browser — try the demo now.</p>
+        <code>make web</code></div>
+    </div>
+    <div style="margin-top:2rem">
+      <a class="btn btn--dark btn--lg" href="{% url 'dashboard' %}">Open the demo &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.meter[data-score]').forEach(function (m) {
+      requestAnimationFrame(function () { m.style.setProperty('--val', m.dataset.score); });
+    });
+  });
+</script>
 {% endblock %}

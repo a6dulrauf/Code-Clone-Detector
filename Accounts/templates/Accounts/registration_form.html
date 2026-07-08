@@ -1,20 +1,42 @@
-{% extends 'CodeClone/base.html'%}
+{% extends 'CodeClone/base.html' %}
+
+{% block title %}Create account · Code Clone Detector{% endblock %}
 
 {% block body %}
+<div class="auth">
+  <div class="auth__card card card__pad stack">
+    <div class="center">
+      <a class="mark" style="justify-content:center" href="{% url 'index' %}"><span class="mark__glyph"></span></a>
+      <h2 style="margin:.7rem 0 .2rem">Create account</h2>
+      <p class="muted" style="margin:0">Or just use <span class="chip">demo</span> / <span class="chip">demo12345</span> on the sign-in page.</p>
+    </div>
 
-<div class="row">
-	<div class="eightcol column">
-		<div class="row">
-			<h1>Register</h1>
-		</div>
-		<form class="ajax-form formatted-form" action="" method="post" enctype="multipart/form-data">
-			{% csrf_token %}
-			{% include 'Accounts/form-template.html' %}
-			<div class="row">
-				<button class="element-button">Register</button>
-			</div>
-		</form>
-	</div>
+    {% for field in form %}
+      {% for error in field.errors %}<div class="msg msg--error">{{ field.label }}: {{ error }}</div>{% endfor %}
+    {% endfor %}
+
+    <form method="post" action="" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div>
+        <label class="field-label" for="id_username">Username</label>
+        <input id="id_username" name="username" type="text" required placeholder="yourname">
+      </div>
+      <div>
+        <label class="field-label" for="id_email">Email</label>
+        <input id="id_email" name="email" type="email" required placeholder="you@example.com">
+      </div>
+      <div>
+        <label class="field-label" for="id_password">Password</label>
+        <input id="id_password" name="password" type="password" required placeholder="••••••••">
+      </div>
+      <div>
+        <label class="field-label" for="id_confirmPassword">Confirm password</label>
+        <input id="id_confirmPassword" name="confirmPassword" type="password" required placeholder="••••••••">
+      </div>
+      <button class="btn btn--primary btn--block btn--lg" type="submit">Create account</button>
+    </form>
+
+    <p class="center muted" style="margin:0">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
 </div>
-
 {% endblock %}
