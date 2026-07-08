@@ -594,15 +594,15 @@ class GUI:
         elif self.rb_tech.get() == 2:
             tech = Euclidean_Distance()
         
-        CSVGenerator.generate_multiples_csv(filepath1,metrics)
-        CSVGenerator.generate_multiples_csv(filepath2,metrics, project_no=2)
-        
-        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets'))
-        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets'),project_no=2)
+        CSVGenerator.generate_multiples_csv(filepath1, metrics, username='desktop')
+        CSVGenerator.generate_multiples_csv(filepath2, metrics, username='desktop', project_no=2)
+
+        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets/desktop/multiple_csv_project1'), username='desktop')
+        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets/desktop/multiple_csv_project2'), username='desktop', project_no=2)
 
         self.tester = Plagiarism_Tester()
-        df1 = dataset_handler.read_csv(file_name = ['project1.csv'] ,address = Directory.get_directory_of('com/vsa/datasets/project1'))
-        df2 = dataset_handler.read_csv(file_name = ['project2.csv'] ,address = Directory.get_directory_of('com/vsa/datasets/project2'))
+        df1 = dataset_handler.read_csv(file_name=['project1.csv'], address=Directory.get_directory_of('com/vsa/datasets/desktop/project1'))
+        df2 = dataset_handler.read_csv(file_name=['project2.csv'], address=Directory.get_directory_of('com/vsa/datasets/desktop/project2'))
         
         #print(df1[0].values[0])
 
