@@ -1,41 +1,42 @@
-{% extends 'CodeClone/base.html'%}
+{% extends 'CodeClone/base.html' %}
+
+{% block title %}Sign in · Code Clone Detector{% endblock %}
 
 {% block body %}
-
-<div class="row">
-    <div class="fourcol column last">
-        <h1>Sign In</h1>
-        {% if demo_hint %}
-        <div style="margin:1rem 0;padding:.75rem 1rem;border:1px solid #cfe;background:#eef;border-radius:6px;font-size:.9rem;color:#334;">
-          <strong>Demo login</strong> — username: <code>demo</code> &nbsp; password: <code>demo12345</code>
-        </div>
-        {% endif %}
-        <form class="ajax-form formatted-form" action="" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input class="form-control" name="login_username" type="text" required/>
-                <input class="form-control" name="login_password" type="password" required/>
-            </div>
-            <div class="form-group">
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="element-button">Submit</button>
-                </div>
-            </div>
-            <div class="form-group">
-                {% for message in messages %}
-                <h5 class=""><font color="red">{{ message }}</font></h5>
-                {% endfor %}
-            </div>
-            <div class="form-group">
-                <div class="d-flex justify-content-center">
-                    <span>Not A User ? </span>
-                    &nbsp &nbsp
-                    <a href="{% url 'signup' %}">Signup</a>
-                </div>
-            </div>
-        </form>
+<div class="auth">
+  <div class="auth__card card card__pad stack">
+    <div class="center">
+      <a class="mark" style="justify-content:center" href="{% url 'index' %}"><span class="mark__glyph"></span></a>
+      <h2 style="margin:.7rem 0 .2rem">Sign in</h2>
+      <p class="muted" style="margin:0">Compare projects and detect code clones.</p>
     </div>
+
+    {% if demo_hint %}
+    <div class="callout">
+      <span aria-hidden="true">▹</span>
+      <div>Try the live demo — no signup needed.<br>
+        user <span class="chip">demo</span> &nbsp; password <span class="chip">demo12345</span></div>
+    </div>
+    {% endif %}
+
+    {% for message in messages %}
+      <div class="msg msg--error">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post" action="" class="stack">
+      {% csrf_token %}
+      <div>
+        <label class="field-label" for="login_username">Username</label>
+        <input id="login_username" name="login_username" type="text" required placeholder="demo" autocomplete="username">
+      </div>
+      <div>
+        <label class="field-label" for="login_password">Password</label>
+        <input id="login_password" name="login_password" type="password" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn--primary btn--block btn--lg" type="submit">Sign in</button>
+    </form>
+
+    <p class="center muted" style="margin:0">New here? <a href="{% url 'signup' %}">Create an account</a></p>
+  </div>
 </div>
-
-
 {% endblock %}

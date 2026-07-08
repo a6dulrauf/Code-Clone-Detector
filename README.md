@@ -23,10 +23,13 @@ automatically.
 
 ## Screenshots / demos
 
-**Web app** — log in with the seeded demo account (`demo` / `demo12345`), open the
-pre-loaded `demo-comparison` project, and run a comparison (no upload needed):
+**Web app** — a clean, developer-focused UI. Log in with the seeded demo account
+(`demo` / `demo12345`), open the pre-loaded `demo-comparison` project, and run a
+comparison (no upload needed):
 
-| Login (demo-credentials banner) | My Projects | Comparison result |
+![Code Clone Detector — landing](docs/media/web-home.png)
+
+| Sign in | My Projects | Comparison result |
 | --- | --- | --- |
 | ![Login](docs/media/web-login.png) | ![My Projects](docs/media/web-projects.png) | ![Result 100%](docs/media/web-result.png) |
 

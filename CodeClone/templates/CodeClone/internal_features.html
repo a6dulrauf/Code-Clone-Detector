@@ -1,142 +1,81 @@
-{% extends 'CodeClone/dashboard_base.html'%}
+{% extends 'CodeClone/dashboard_base.html' %}
+
+{% block title %}Internal clone{% endblock %}
+{% block heading %}Internal clone{% endblock %}
+
+{% block dashboard_content %}
+<div class="stack" style="max-width:920px">
+
+  <div>
+    <span class="eyebrow">Within a project</span>
+    <h2 style="margin:.3rem 0 .2rem">Scan for internal duplication</h2>
+    <p class="muted" style="margin:0">Run the check on either code set in this project.</p>
+  </div>
+
+  <div class="card card__pad" style="display:flex; gap:.8rem; flex-wrap:wrap">
+    <form action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <button class="btn btn--primary" type="submit" name="project1_features" value="1">Scan project 1</button>
+    </form>
+    <form action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <button class="btn btn--ghost" type="submit" name="project2_features" value="1">Scan project 2</button>
+    </form>
+  </div>
+
+  {% if model.result and model.features %}
+    {% for key, val in model.result.items %}
+      {% if key != 'dfs' and key != 'dfsnames' %}
+      <div class="card card__pad stack">
+        <div class="meter" data-score="{{ val }}" style="--val:0">
+          <div class="meter__top">
+            <div><span class="eyebrow">{{ key }}</span>
+              <div class="meter__score">{{ val }}<small>%</small></div></div>
+            {% if val >= 95 %}<span class="verdict verdict--clone">Likely clone</span>
+            {% else %}<span class="verdict verdict--distinct">Not a clone</span>{% endif %}
+          </div>
+          <div class="meter__track"><div class="meter__fill"></div></div>
+        </div>
+
+        {% for k, v in model.features.items %}
+          {% if k == key %}
+          <div class="feat-grid">
+            <div class="card"><div class="card__pad" style="padding-bottom:.6rem"><h3 style="margin:0">File 1 features</h3></div>
+              <div class="tablewrap"><table class="ftable">
+                <thead><tr><th>#</th><th>Feature</th><th>Freq</th></tr></thead>
+                <tbody>{% for fea, freq in v.0.items %}<tr><td class="muted">{{ forloop.counter }}</td><td class="feat">{{ fea }}</td><td class="mono">{{ freq.0 }}</td></tr>{% endfor %}</tbody>
+              </table></div>
+            </div>
+            <div class="card"><div class="card__pad" style="padding-bottom:.6rem"><h3 style="margin:0">File 2 features</h3></div>
+              <div class="tablewrap"><table class="ftable">
+                <thead><tr><th>#</th><th>Feature</th><th>Freq</th></tr></thead>
+                <tbody>{% for fea, freq in v.1.items %}<tr><td class="muted">{{ forloop.counter }}</td><td class="feat">{{ fea }}</td><td class="mono">{{ freq.0 }}</td></tr>{% endfor %}</tbody>
+              </table></div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+</div>
+{% endblock %}
 
 {% block css %}
 <style>
-.table-wrapper {
-  max-height: 530px;
-  overflow: auto;
-  display:inline-block;
-}
+  .feat-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:720px){ .feat-grid { grid-template-columns:1fr; } }
 </style>
 {% endblock %}
 
-{% block dashboard_content %}
-
-<div>
-
-    <div class="row">
-          <div class="col">
-              <div class="d-flex justify-content-center">
-                  <h2 class="text-uppercase font-weight-bold text-danger"> PROJECT INTERNAL FEATURES AND PLAGIARISM </h2>
-              </div>
-          </div>
-      </div>
-
-    <div class="row">
-          <div class="col-md-3 col-sm-3">
-
-          </div>
-          <div class="col-md-3 col-sm-3 d-flex justify-content-center">
-              <form class="form" action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  <input class="btn btn-primary" type="submit" name="project1_features" value="PROJECT 1"/>
-              </form>
-          </div>
-          <div class="col-md-3 col-sm-3 d-flex justify-content-center">
-              <form class="form" action="{% url 'internal-features' %}" method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  <input class="btn btn-primary" type="submit" name="project2_features" value="PROJECT 2"/>
-              </form>
-          </div>
-          <div class="col-md-3 col-sm-3">
-
-          </div>
-      </div>
-
-    <hr>
-
-    <div class="row">
-          {% if model.result and model.features %}
-
-            {% for key, val in model.result.items %}
-                <div class="col-12">
-                    <div class="card">
-                        {% if key != 'dfs' and key != 'dfsnames' %}
-                          <div class="card-header card-header-primary">
-                              <h3 class="card-title ">{{key}}</h3>
-                              <h4 class="card-category"> Plagiarism : {{val}} %</h4>
-                          </div>
-                          <div class="card-body">
-                              <div class="table-responsive table-wrapper">
-
-                                  {% for k,v in model.features.items %}
-
-                                    {% if k == key %}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <table class="table">
-                                                    <thead class=" text-primary">
-                                                      <th>
-                                                        ID
-                                                      </th>
-                                                      <th>
-                                                        Feature
-                                                      </th>
-                                                      <th>
-                                                        Frequency
-                                                      </th>
-                                                    </thead>
-                                                    {% for fea, freq in v.0.items %}
-                                                        <tbody>
-                                                            <tr>
-                                                            <td>
-                                                              {{forloop.counter}}
-                                                            </td>
-                                                            <td>
-                                                              {{fea}}
-                                                            </td>
-                                                            <td>
-                                                              {{freq.0}}
-                                                            </td>
-                                                            </tr>
-
-                                                        </tbody>
-                                                    {% endfor %}
-                                                </table>
-                                            </div>
-                                            <div class="col-6">
-                                                <table class="table">
-                                                    <thead class=" text-primary">
-                                                      <th>
-                                                        ID
-                                                      </th>
-                                                      <th>
-                                                        Feature
-                                                      </th>
-                                                      <th>
-                                                        Frequency
-                                                      </th>
-                                                    </thead>
-                                                    {% for fea, freq in v.1.items %}
-                                                        <tbody>
-                                                            <tr>
-                                                            <td>
-                                                              {{forloop.counter}}
-                                                            </td>
-                                                            <td>
-                                                              {{fea}}
-                                                            </td>
-                                                            <td>
-                                                              {{freq.0}}
-                                                            </td>
-                                                            </tr>
-
-                                                        </tbody>
-                                                    {% endfor %}
-                                                </table>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                  {% endfor %}
-                              </div>
-                          </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-
-          {% endif %}
-        </div>
-
-</div>
+{% block script %}
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.meter[data-score]').forEach(function (m) {
+      requestAnimationFrame(function () { m.style.setProperty('--val', m.dataset.score); });
+    });
+  });
+</script>
 {% endblock %}
