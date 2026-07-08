@@ -51,8 +51,6 @@ def projects(request):
 def project_features(request, project_name=None):
     model = ProjectViewModel()
     if project_name is not None:
-        print("PROJECT IS HERE")
-        print(project_name)
         username = request.session['username']
         dirs = Directory.get_directory_of("projects/"+username+"/"+project_name)
         request.session['dir_dataset'] = username+"/"+project_name
@@ -100,8 +98,6 @@ def internal_projects(request):
 def internal_features(request, project_name=None):
     model = InternalProjectViewModel()
     if project_name is not None:
-        print("PROJECT IS HERE")
-        print(project_name)
         username = request.session['username']
         dirs = Directory.get_directory_of("projects/"+username+"/"+project_name)
         request.session['dir_dataset'] = username+"/"+project_name
