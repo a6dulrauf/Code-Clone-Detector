@@ -11,7 +11,9 @@ names and the links will resolve with no further edits.
 1. `make web` (or `make docker`) to start the Django app locally.
 2. Open the login page — note the demo-credentials hint banner.
 3. Log in with `demo` / `demo12345`.
-4. Start a comparison (upload or pick the seeded demo projects) and run it.
+4. Go to **My Projects**, open the seeded **demo-comparison** project, and
+   click **TEST PLAGIARISM** — no upload needed, it's pre-loaded with
+   `samples/Original.java` and `samples/NearClone.java`.
 5. Let the recording run until the numeric similarity result is visible on screen.
 6. Record with macOS screen recording (Cmd-Shift-5) or `ffmpeg`, then convert to
    an optimized GIF with Gifski or `ffmpeg`'s palette-based GIF pipeline. Keep it
