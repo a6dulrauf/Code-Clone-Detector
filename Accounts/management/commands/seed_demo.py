@@ -21,11 +21,11 @@ class Command(BaseCommand):
         self.stdout.write(f"demo user {'created' if created else 'updated'}: {DEMO_USER}/{DEMO_PASS}")
 
         samples = os.path.join(settings.BASE_DIR, "samples")
-        for proj, files in (("project1", ["Original.java"]), ("project2", ["NearClone.java"])):
-            dest = os.path.join(settings.BASE_DIR, "projects", DEMO_USER, proj)
+        proj = os.path.join(settings.BASE_DIR, "projects", DEMO_USER, "demo-comparison")
+        for sub, f in (("project1", "Original.java"), ("project2", "NearClone.java")):
+            dest = os.path.join(proj, sub)
             os.makedirs(dest, exist_ok=True)
-            for f in files:
-                src = os.path.join(samples, f)
-                if os.path.exists(src):
-                    shutil.copy(src, os.path.join(dest, f))
-        self.stdout.write("demo project seeded under projects/demo/")
+            src = os.path.join(samples, f)
+            if os.path.exists(src):
+                shutil.copy(src, os.path.join(dest, f))
+        self.stdout.write("demo project seeded: projects/demo/demo-comparison (project1/, project2/)")

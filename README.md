@@ -52,7 +52,7 @@ A near-clone pair (renamed identifiers) and an unrelated pair:
 the bundled demo pair.
 
 ```bash
-make cli ARGS="compare a.java b.java"
+make cli ARGS="compare samples/Original.java samples/NearClone.java"
 make demo
 ```
 
@@ -69,6 +69,13 @@ projects, backed by the same engine and deployable via Docker/Render.
 ```bash
 make web
 ```
+
+Quickest way to see a result: log in as `demo` / `demo12345` → **My
+Projects** → open the seeded **demo-comparison** project → click **TEST
+PLAGIARISM** (no upload needed — it's pre-loaded with `samples/Original.java`
+and `samples/NearClone.java`) → the similarity result renders on the same
+page. You can also create your own project and upload two folders of `.java`
+files to compare instead.
 
 ## Architecture
 
@@ -118,7 +125,7 @@ distribution behind that number.
 make setup   # creates .venv, installs deps, downloads nltk data, migrates DB, seeds demo user
 make web     # Django dev server at http://127.0.0.1:8000
 make demo    # CLI demo on bundled samples
-make cli ARGS="compare a.java b.java"
+make cli ARGS="compare samples/Original.java samples/NearClone.java"
 make desktop # Tkinter GUI
 ```
 
