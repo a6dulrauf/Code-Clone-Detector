@@ -23,16 +23,14 @@ automatically.
 
 ## Screenshots / demos
 
-| CLI | Desktop | Web |
+**Web app** — log in with the seeded demo account (`demo` / `demo12345`), open the
+pre-loaded `demo-comparison` project, and run a comparison (no upload needed):
+
+| Login (demo-credentials banner) | My Projects | Comparison result |
 | --- | --- | --- |
-| ![CLI demo](docs/media/cli.gif) | ![Desktop demo](docs/media/desktop.gif) | ![Web demo](docs/media/web.gif) |
+| ![Login](docs/media/web-login.png) | ![My Projects](docs/media/web-projects.png) | ![Result 100%](docs/media/web-result.png) |
 
-These are captured live by the repo owner — see
-[`docs/media/README.md`](docs/media/README.md) for exactly what each one shows.
-Until they're added, GitHub will show broken-image placeholders; the CLI
-transcript below always renders, so it's included as a text-based fallback.
-
-Actual CLI output (`make demo`):
+**CLI** — actual `make demo` output:
 
 ```
 Code Clone Detector — demo
@@ -45,6 +43,9 @@ A near-clone pair (renamed identifiers) and an unrelated pair:
   Original.java vs Unrelated.java
     similarity: 90.37%   ->  NOT A CLONE
 ```
+
+**Desktop** — the Tkinter app (`make desktop`). Add a screenshot/GIF at
+`docs/media/desktop.png` (capture steps in [`docs/media/README.md`](docs/media/README.md)).
 
 ## The three interfaces
 
