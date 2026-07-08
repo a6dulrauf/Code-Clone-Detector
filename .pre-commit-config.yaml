@@ -1,0 +1,8 @@
+# Pre-commit hooks. Activate once per clone with `make hooks` (or `pre-commit install`).
+# gitleaks scans the staged diff for secrets on every commit and blocks the commit if any are found.
+# Docs: https://github.com/gitleaks/gitleaks
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
