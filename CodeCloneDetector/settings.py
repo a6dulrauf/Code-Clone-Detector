@@ -25,7 +25,7 @@ STATICFILES_DIRS = [
 SECRET_KEY = os.environ.get('SECRET_KEY', 'b*i(hk9rcskf!#f4oa%z+-#hn$9(brny4sz7b5g@$jb+0qonyk')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
