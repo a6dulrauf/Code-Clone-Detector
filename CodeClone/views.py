@@ -59,26 +59,32 @@ def project_features(request, project_name=None):
         request.session['dir_project'] = dirs
 
     if request.method == 'POST':
+        if 'dir_project' not in request.session or 'dir_dataset' not in request.session:
+            messages.error(request, 'Open a project first, then run the comparison.')
+            return redirect('projects')
 
-        Directory.delete_dir('com/vsa/datasets/'+request.session['dir_dataset'])
-        Directory.delete_dir(request.session['dir_project'])
-
-        for afile in request.FILES.getlist('project1'):
-            if HelperViewModel.is_file_java(str(afile)):
-                #File_Handler.write_file(afile, 'Users/'+str(request.session['username'])+'/projects/project1')
-                File_Handler.write_file(afile, str(request.session['dir_project'])+'project1')
-        for afile in request.FILES.getlist('project2'):
-            if HelperViewModel.is_file_java(str(afile)):
-                #File_Handler.write_file(afile, 'Users/'+str(request.session['username'])+'/projects/project2')
-                File_Handler.write_file(afile, str(request.session['dir_project'])+'project2')
+        has_uploads = bool(request.FILES.getlist('project1') or request.FILES.getlist('project2'))
+        if has_uploads:
+            Directory.delete_dir('com/vsa/datasets/'+request.session['dir_dataset'])
+            Directory.delete_dir(request.session['dir_project'])
+            for afile in request.FILES.getlist('project1'):
+                if HelperViewModel.is_file_java(str(afile)):
+                    File_Handler.write_file(afile, str(request.session['dir_project'])+'project1')
+            for afile in request.FILES.getlist('project2'):
+                if HelperViewModel.is_file_java(str(afile)):
+                    File_Handler.write_file(afile, str(request.session['dir_project'])+'project2')
 
         dirs = [Directory.get_directory_of(str(request.session['dir_project'])+'project1'),
                 Directory.get_directory_of(str(request.session['dir_project'])+'project2')]
 
-        nGram = request.POST['nGramRange']
+        nGram = request.POST.get('nGramRange', 1)
+        try:
+            res = model.run_test_Project(username=str(request.session['dir_dataset']), dirs=dirs, ngram=int(nGram))
+        except Exception as e:
+            print(e)
+            messages.error(request, 'Comparison failed — both projects need at least one .java file.')
+            return render(request, "CodeClone/project_features.html")
 
-        res = model.run_test_Project(username=str(request.session['dir_dataset']), dirs=dirs, ngram=int(nGram))
-        #print(res)
         view_model = {'model': model}
         return render(request, "CodeClone/project_features.html", view_model)
 

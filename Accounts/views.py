@@ -45,7 +45,7 @@ def signup_user(request):
     return render(request, "Accounts/registration_form.html", {'form': form_view})
 
 def login_user(request):
-    demo_hint = os.environ.get("DEMO_HINT", "True") == "True"
+    demo_hint = os.environ.get("DEMO_HINT", "True").lower() == "true"
     if request.method == 'POST':
         username = request.POST['login_username']
         password = request.POST['login_password']
