@@ -764,7 +764,7 @@ Verify `gunicorn`, `whitenoise`, `Django==4.2.*` present.
 Replace the `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS` block with:
 
 ```python
-SECRET_KEY = os.environ.get('SECRET_KEY', 'b*i(hk9rcskf!#f4oa%z+-#hn$9(brny4sz7b5g@$jb+0qonyk')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-only-key-set-SECRET_KEY-env-in-prod')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
