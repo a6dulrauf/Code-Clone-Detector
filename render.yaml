@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: code-clone-detector
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: DEMO_HINT
+        value: "True"
