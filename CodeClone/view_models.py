@@ -55,18 +55,25 @@ class InternalProjectViewModel:
         self.result = None
         self.features = None
 
-    def run_test_Project(self, username, project_no, tech=CosineDistance()):
-        internal_clone = InternalClone()
-        if project_no == 1:
-            path = Directory.get_directory_of('com/vsa/datasets/'+str(username)+'/multiple_csv_project1/')
-        elif project_no == 2 :
-            path = Directory.get_directory_of('com/vsa/datasets/'+str(username)+'/multiple_csv_project2/')
+    def run_test_Project(self, username, source_dir, project_no, language='java', tech=None):
+        from com.vsa.multiple_files.csv_generator import CSVGenerator
+        from com.vsa.metrics.ngram_metrics import NGram_Metrics
+        if tech is None:
+            tech = CosineDistance()
 
-        result_dict = internal_clone.test_internal_clone(path, tech)
-        #print(result_dict)
+        # Regenerate the per-file feature CSVs straight from the project's source
+        # files, so internal clone works on its own (no prior project comparison
+        # needed) and can't read stale files from an earlier run.
+        csv_dir = 'com/vsa/datasets/' + str(username) + '/multiple_csv_project' + str(project_no)
+        Directory.delete_dir(csv_dir)
+        CSVGenerator.generate_multiples_csv(source_dir, NGram_Metrics(2, language=language),
+                                            username=username, project_no=project_no)
+
+        internal_clone = InternalClone()
+        result_dict = internal_clone.test_internal_clone(
+            Directory.get_directory_of(csv_dir), tech, language=language)
         self.features = internal_clone.features
         self.set_result(result_dict)
-
         return result_dict
 
     def get_result(self):

@@ -6,10 +6,13 @@
 {% block dashboard_content %}
 <div class="stack" style="max-width:920px">
 
+  {% for message in messages %}<div class="msg msg--{{ message.tags }}">{{ message }}</div>{% endfor %}
+
   <div>
     <span class="eyebrow">Within a project</span>
     <h2 style="margin:.3rem 0 .2rem">Scan for internal duplication</h2>
-    <p class="muted" style="margin:0">Run the check on either code set in this project.</p>
+    <p class="muted" style="margin:0">Compares every file in a code set against every other, to
+    surface duplicated files within a single project. Needs at least two files in the set.</p>
   </div>
 
   <div class="card card__pad" style="display:flex; gap:.8rem; flex-wrap:wrap">

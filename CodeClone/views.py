@@ -130,19 +130,35 @@ def internal_features(request, project_name=None):
         request.session['dir_project'] = dirs
 
     if request.method == "POST":
-        try:
-            if 'project1_features' in request.POST:
-                res = model.run_test_Project(username=str(request.session['dir_dataset']), project_no=1)
-                view_model = {'model': model}
-                return render(request, "CodeClone/internal_features.html", view_model)
-            if 'project2_features' in request.POST:
-                res = model.run_test_Project(username=str(request.session['dir_dataset']), project_no=2)
-                view_model = {'model': model}
-                return render(request, "CodeClone/internal_features.html", view_model)
+        if 'dir_project' not in request.session or 'dir_dataset' not in request.session:
+            messages.error(request, 'Open a project first, then run the scan.')
+            return redirect('internal-projects')
 
+        project_dir = str(request.session['dir_project'])
+        language = HelperViewModel.get_project_language(project_dir)
+        project_no = 2 if 'project2_features' in request.POST else 1
+        source_dir = Directory.get_directory_of(project_dir + 'project' + str(project_no))
+
+        # Internal clone compares files within one project, so it needs >= 2.
+        exts = languages.get(language).extensions
+        srcs = [x for x in Directory.search_directories(source_dir, exts) if x.strip()]
+        if len(srcs) < 2:
+            messages.error(
+                request,
+                'Internal clone needs at least 2 %s files in Project %d (found %d). '
+                'Upload more files to that project, or try the seeded internal-demo project.'
+                % (language, project_no, len(srcs)))
+            return render(request, "CodeClone/internal_features.html")
+
+        try:
+            model.run_test_Project(username=str(request.session['dir_dataset']),
+                                   source_dir=source_dir, project_no=project_no, language=language)
         except Exception as e:
             print(e)
-            raise Http404(e.__str__())
+            messages.error(request, 'Scan failed: %s' % e)
+            return render(request, "CodeClone/internal_features.html")
+
+        return render(request, "CodeClone/internal_features.html", {'model': model})
 
     return render(request, "CodeClone/internal_features.html")
 
