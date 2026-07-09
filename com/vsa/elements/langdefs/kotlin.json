@@ -1,0 +1,25 @@
+{
+  "name": "kotlin",
+  "label": "Kotlin",
+  "extensions": [".kt", ".kts"],
+  "aliases": ["kt"],
+  "keywords": [
+    "fun", "val", "var", "class", "object", "interface", "if", "else", "when",
+    "for", "while", "do", "return", "break", "continue", "is", "in", "as",
+    "try", "catch", "finally", "throw", "import", "package", "override",
+    "open", "private", "public", "protected", "internal", "abstract", "final",
+    "data", "sealed", "enum", "companion", "init", "constructor", "this",
+    "super", "null", "true", "false", "lateinit", "by", "get", "set",
+    "suspend", "typealias"
+  ],
+  "operators": [
+    "{", "}", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "==", "!=",
+    "<", ">", "<=", ">=", "&&", "||", "!", "?.", "?:", "->", "::", ".", ",",
+    ";", ":", "++", "--", "+=", "-="
+  ],
+  "operands": [
+    "Int", "Long", "Short", "Byte", "Double", "Float", "Boolean", "Char",
+    "String", "Unit", "Any", "List", "MutableList", "Map", "MutableMap",
+    "Set", "Array"
+  ]
+}

@@ -11,21 +11,21 @@
   {% endfor %}
 
   <div>
-    <span class="eyebrow">Project comparison</span>
+    <span class="eyebrow">Project comparison · {{ language|default:"java"|capfirst }}</span>
     <h2 style="margin:.3rem 0 .2rem">Detect clones between two projects</h2>
-    <p class="muted" style="margin:0">Upload two folders of <code class="mono">.java</code> files, or just run it on the pre-loaded demo project — no upload needed.</p>
+    <p class="muted" style="margin:0">This project analyzes <strong>{{ language|default:"java"|capfirst }}</strong> (<code class="mono">{{ accept|default:".java" }}</code>). Upload two folders of source files, then click <strong>Run comparison</strong>. The seeded <code class="mono">demo-comparison</code> project runs with no upload needed.</p>
   </div>
 
-  <form class="card card__pad" id="form_project" action="{% url 'project-features' %}" method="post" enctype="multipart/form-data">
+  <form class="card card__pad" id="form_project" action="{% url 'project-features' %}" method="post" enctype="multipart/form-data" data-accept="{{ accept|default:'.java' }}">
     {% csrf_token %}
     <div class="run-grid">
       <div>
         <label class="field-label" for="upload_project1">Project 1 folder</label>
-        <input id="upload_project1" type="file" name="project1" multiple webkitdirectory directory class="input">
+        <input id="upload_project1" type="file" name="project1" multiple webkitdirectory directory accept="{{ accept }}" class="input">
       </div>
       <div>
         <label class="field-label" for="upload_project2">Project 2 folder</label>
-        <input id="upload_project2" type="file" name="project2" multiple webkitdirectory directory class="input">
+        <input id="upload_project2" type="file" name="project2" multiple webkitdirectory directory accept="{{ accept }}" class="input">
       </div>
       <div style="max-width:130px">
         <label class="field-label" for="nGramRange">n-gram</label>
@@ -92,6 +92,11 @@
   .run-grid { display:grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items:end; }
   .feat-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   input[type=file].input { padding:.6rem; font-family: var(--mono); font-size:.82rem; }
+  .upload-hint { font-size:.78rem; margin-top:.35rem; }
+  .spinner { display:inline-block; width:.9em; height:.9em; border:2px solid rgba(255,255,255,.45);
+             border-top-color:#fff; border-radius:50%; animation:ccd-spin .6s linear infinite; vertical-align:-.12em; margin-right:.4em; }
+  @keyframes ccd-spin { to { transform: rotate(360deg); } }
+  .btn.is-loading { opacity:.85; cursor:progress; }
   @media (max-width: 720px){ .run-grid, .feat-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}
@@ -103,5 +108,40 @@
     var m = document.querySelector('.meter[data-score]');
     if (m) { requestAnimationFrame(function () { m.style.setProperty('--val', m.dataset.score); }); }
   });
+
+  (function () {
+    var form = document.getElementById('form_project');
+    if (!form) return;
+    var accept = (form.dataset.accept || '.java').split(',')
+      .map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+    // A folder picker grabs every file; keep only this language's extensions
+    // so the upload is small and the user sees what will actually be compared.
+    function filterInput(input) {
+      if (!input || !input.files || typeof DataTransfer === 'undefined') return;
+      var dt = new DataTransfer(), kept = 0;
+      for (var i = 0; i < input.files.length; i++) {
+        var name = input.files[i].name.toLowerCase();
+        if (accept.some(function (ext) { return name.endsWith(ext); })) { dt.items.add(input.files[i]); kept++; }
+      }
+      input.files = dt.files;
+      var hint = input.parentNode.querySelector('.upload-hint');
+      if (!hint) { hint = document.createElement('div'); hint.className = 'upload-hint muted'; input.parentNode.appendChild(hint); }
+      hint.textContent = kept
+        ? (kept + ' matching file' + (kept > 1 ? 's' : '') + ' selected')
+        : 'No ' + accept.join('/') + ' files in that folder';
+    }
+    ['upload_project1', 'upload_project2'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('change', function () { filterInput(el); });
+    });
+
+    // Show an in-page spinner while the comparison runs (it can take a few
+    // seconds, especially on a cold-started free host).
+    var btn = document.getElementById('test_plagiarism');
+    form.addEventListener('submit', function () {
+      if (btn) { btn.disabled = true; btn.classList.add('is-loading'); btn.innerHTML = '<span class="spinner"></span>Comparing…'; }
+    });
+  })();
 </script>
 {% endblock %}

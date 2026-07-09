@@ -11,6 +11,7 @@ import time as t
 from tkinter import *
 
 from tkinter import ttk
+from tkinter import messagebox
 from PIL import ImageTk,Image
 
 IMAGES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
@@ -24,11 +25,13 @@ from com.vsa.utilities.helper import Helper
 from com.vsa.gui.plotgui import PlotGUI
 from com.vsa.metrics.HalsteadMetrics import HalsteadMetrics
 from com.vsa.metrics.ngram_metrics import NGram_Metrics
+from com.vsa.elements import languages
 from com.vsa.plagiarism_techniques.cosine_distance import CosineDistance
 from com.vsa.plagiarism_techniques.euclidean_distance import Euclidean_Distance
 from com.vsa.plagiarism_tester import Plagiarism_Tester
 from com.vsa.gui.thread import CustomThread
 from com.vsa.multiple_files.csv_generator import CSVGenerator
+from com.vsa.projects_cloning.project_clone.project_clone import ProjectClone
 from com.vsa.utilities.directories import Directory
 from com.vsa.dataset_handler.dataset_handler import DatasetHandler
 
@@ -39,7 +42,8 @@ class GUI:
         #self.datahandler=DataHandler()
         #self.plot=Plot()
         self.root=Tk()
-        self.root.geometry('1024x600')
+        self.root.geometry('1180x820')
+        self.root.minsize(1000, 740)
         self.root.resizable(1,1)
         self.root.title('Code Clone Detector')
         self._setup_theme()
@@ -113,32 +117,36 @@ class GUI:
         self.topframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0)
         self.bottomframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0,width=250)
         
-        self.left_top_imgframe.pack(side=TOP,fill=BOTH)
-        self.left_dir_frame.pack(side=LEFT,fill=BOTH,expand=YES)
-        self.leftframe.pack(side=LEFT,fill=BOTH,padx=5,pady=5)
-        self.topframe.pack(side=TOP,pady=5)
-        '''
-        middle window is not pack
-        '''
-        #self.bottomframe.pack(side=LEFT,fill=BOTH,padx=5,expand=1)
-        
-        self.rightframe.pack(side=RIGHT,fill=BOTH,expand=1)
+        # Responsive grid: header across the top, a fixed control sidebar
+        # (controls + directory trees), and a main area (result card + feature
+        # tables) that expands to fill the window when resized.
+        root.grid_columnconfigure(0, weight=0, minsize=300)   # sidebar
+        root.grid_columnconfigure(1, weight=1)                # main area expands
+        root.grid_rowconfigure(2, weight=1)                   # tables / trees row expands
+
+        self.left_top_imgframe.grid(row=0, column=0, columnspan=2, sticky='ew', padx=12, pady=(12,8))
+        self.leftframe.grid(row=1, column=0, rowspan=2, sticky='nsew', padx=(12,6), pady=(0,8))
+        self.topframe.grid(row=1, column=1, sticky='ew', padx=(6,12), pady=(0,8))
+        self.rightframe.grid(row=2, column=1, sticky='nsew', padx=(6,12), pady=(0,8))
+        # both project directory trees share a full-width strip along the bottom
+        self.left_dir_frame.grid(row=3, column=0, columnspan=2, sticky='ew', padx=12, pady=(0,12))
+        # self.bottomframe (charts) intentionally not shown
 
     def main_heading(self,master):
         main_headinglabel=Label(master,text="Code Clone Detector",
                                 font=(Helper.fontstyle,Helper.mainheading_label_size,'bold'),
                                 fg=Helper.INK,bg=Helper.PAPER)
-        main_headinglabel.pack(side=LEFT,expand=1,fill=Y,padx=12)
+        main_headinglabel.pack(side=LEFT,padx=10)
         
     def place_image(self,master,path):
-        canvas=Canvas(master,height=80)
+        canvas=Canvas(master,height=72,width=72,highlightthickness=0,bg=Helper.PAPER)
         
         #image=PhotoImage(file = path)
         try:    
             opImage=Image.open(path)
             #opImage.resize=((0.1,0.1),Image.ANTIALIAS)
             #opImage.resize((pixels_x, pixels_y)
-            canvas.image = ImageTk.PhotoImage(opImage.resize((150,80),Image.LANCZOS))
+            canvas.image = ImageTk.PhotoImage(opImage.resize((64,64),Image.LANCZOS))
             canvas.create_image(0,0, image=canvas.image, anchor='nw')
             #label=Label(master=master,image=img)
             #label.image=img
@@ -165,21 +173,18 @@ class GUI:
         self.resultlabel=Label(master,text='—',
                                font=(Helper.monofont,Helper.resultfontsize,'bold'),
                                fg=Helper.INK,bg=Helper.PAPER)
-        self.resultlabel.pack(side=TOP,fill=X,expand=1)
+        self.resultlabel.pack(side=TOP,fill=X,pady=(2,10))
 
         self.progressbar=ttk.Progressbar(master,orient=HORIZONTAL,length=100,mode='determinate')
-        self.progressbar.pack(fill=X,padx=14,pady=(0,12))
+        self.progressbar.pack(fill=X,padx=14,pady=(0,14))
         #self.run_progessbar()
     
     def run_progessbar(self):
-        self.progressbar['maximum']=100
-        for i in range(101):
-            self.progressbar['value']=i
-            self.progressbar.update()
-            t.sleep(0.1)            
-        
-        self.progressbar['value']=0
-        self.progressbar.start()
+        # Indeterminate animation only. The old version ran a blocking
+        # `for i in range(101): sleep(0.1)` loop that froze the UI for ~10s
+        # and could not be stopped.
+        self.progressbar.config(mode='indeterminate')
+        self.progressbar.start(12)
         
         '''
         left plagiarism test window methods
@@ -189,13 +194,20 @@ class GUI:
         testerframe = Frame(self.leftframe)
         testerframe.pack(fill=BOTH,pady=5,expand=1)
 
-        notelabel = Label(testerframe,text=Helper.note,font=(Helper.fontstyle,Helper.buttonfontsize))
-        notelabel.pack(side=TOP,expand=1)
+        notelabel = Label(testerframe,text=Helper.note,font=(Helper.fontstyle,9),
+                          fg=Helper.MUTED,bg=Helper.PAPER,justify='center')
+        notelabel.pack(side=TOP,expand=1,pady=(4,2))
         
+        langheadinglabel=Label(testerframe,text='Select Language')
+        langheadinglabel.config(font=(Helper.fontstylebold,Helper.headingfontsize))
+        langheadinglabel.pack(side=TOP,pady=5,expand=1)
+
+        self.language_selector(testerframe)
+
         fileheadinglabel=Label(testerframe,text='Select Source Files')
         fileheadinglabel.config(font=(Helper.fontstylebold,Helper.headingfontsize))
         fileheadinglabel.pack(side=TOP,pady=5,expand=1)
-        
+
         self.open_srcfile_buttons(testerframe)
 
         metricsheadinglabel=Label(testerframe,text='Select Metrics')
@@ -212,29 +224,46 @@ class GUI:
         
         btn_test=ttk.Button(testerframe,text='TEST PLAGIARISM',style='Accent.TButton',
                             command=lambda: self.set_on_plagiarism_test(None))
-        btn_test.pack(side=BOTTOM,fill=X,expand=1,padx=8,pady=8)
+        btn_test.pack(side=TOP,fill=X,padx=10,pady=(16,10))
         #btn_test.event_add(Event_Handler.set_on_plagiarism_test(self.rb_metrics))
         
-    def open_srcfile_buttons(self,master):
-       # st = Styling()
-        #st.apply_on_button()
-        
-        srclabel1 = Label(master,text='Source File 1 : Not Selected')
-        browsebtn1 = Button(master,text='Browse',command = lambda : self.eventhandler.set_on_browse(self.dir_tree1))
-        
-        srclabel1.config(font=(Helper.fontstyle,Helper.buttonfontsize))
-        browsebtn1.config(font=(Helper.fontstyle,Helper.buttonfontsize))
-        srclabel1.pack(side=TOP,expand=1)
-        browsebtn1.pack(side=TOP,expand=1)
-        
-        srclabel2=Label(master,text='Source File 2 : Not Selected')
-        browsebtn2=Button(master,text='Browse',command = lambda : self.eventhandler.set_on_browse(self.dir_tree2))
+    def language_selector(self, master):
+        # Labels ('Java','Python','C++') double as values — languages.get()
+        # resolves them case-insensitively (and 'C++' via alias).
+        self.language_var = StringVar(master)
+        labels = [lbl for _, lbl in languages.options()]
+        self.language_var.set(labels[0])
+        om = ttk.OptionMenu(master, self.language_var, labels[0], *labels)
+        om.pack(side=TOP, expand=1, pady=(0, 4))
 
-        srclabel2.config(font=(Helper.fontstyle,Helper.buttonfontsize))
+    def selected_extensions(self):
+        return languages.get(self.language_var.get()).extensions
+
+    def open_srcfile_buttons(self,master):
+        self.srclabel1 = Label(master,text='Project 1 : not selected',
+                               font=(Helper.fontstyle,Helper.buttonfontsize),
+                               fg=Helper.MUTED,bg=Helper.PAPER)
+        browsebtn1 = Button(master,text='Browse Project 1',command=lambda: self._browse(1))
+        browsebtn1.config(font=(Helper.fontstyle,Helper.buttonfontsize))
+        self.srclabel1.pack(side=TOP,expand=1)
+        browsebtn1.pack(side=TOP,expand=1,pady=(0,6))
+
+        self.srclabel2 = Label(master,text='Project 2 : not selected',
+                               font=(Helper.fontstyle,Helper.buttonfontsize),
+                               fg=Helper.MUTED,bg=Helper.PAPER)
+        browsebtn2 = Button(master,text='Browse Project 2',command=lambda: self._browse(2))
         browsebtn2.config(font=(Helper.fontstyle,Helper.buttonfontsize))
-        
-        srclabel2.pack(side=TOP,expand=1)
-        browsebtn2.pack(side=TOP,expand=1)
+        self.srclabel2.pack(side=TOP,expand=1)
+        browsebtn2.pack(side=TOP,expand=1,pady=(0,6))
+
+    def _browse(self, slot):
+        tree = self.dir_tree1 if slot == 1 else self.dir_tree2
+        self.eventhandler.set_on_browse(tree, slot, self.selected_extensions())
+        path = self.eventhandler.path1 if slot == 1 else self.eventhandler.path2
+        label = self.srclabel1 if slot == 1 else self.srclabel2
+        if path:
+            label['text'] = 'Project %d : %s' % (slot, os.path.basename(path.rstrip('/')))
+            label['fg'] = Helper.INK
 
     def metrics_check_buttons(self,master):
         self.isNgram=False 
@@ -274,8 +303,8 @@ class GUI:
         cosine.config(font=(Helper.fontstyle,Helper.buttonfontsize))
         eucl.config(font=(Helper.fontstyle,Helper.buttonfontsize))
         
-        cosine.pack(side=TOP,fill=X,expand=1)
-        eucl.pack(side=TOP,fill=X,pady=5,expand=1)
+        cosine.pack(side=TOP,expand=1)
+        eucl.pack(side=TOP,pady=5,expand=1)
 
         '''
         end of left window
@@ -322,19 +351,21 @@ class GUI:
     feature window
     '''
     def create_feature_window_gui(self):
-        featureframe = Frame(self.rightframe)
+        featureframe = Frame(self.rightframe, bg=Helper.PAPER)
         featureframe.pack(fill=BOTH,expand=1)
-        
-        featureheadinglbl = Label(featureframe,text='FEATURE FREQUENCY',font=(Helper.fontstyle,Helper.headingfontsize))
-        featureheadinglbl.pack()
-        
-        '''
-        uncomment this to show frequency in listbox
-        '''
-        #self.create_listbox(featureframe)
-        
-        self.tv_file1 = self.create_table(featureframe)
-        self.tv_file2 = self.create_table(featureframe)
+        featureframe.grid_columnconfigure(0, weight=1)
+        featureframe.grid_rowconfigure(1, weight=1)   # two tables share the
+        featureframe.grid_rowconfigure(2, weight=1)   # space 50/50
+
+        featureheadinglbl = Label(featureframe,text='FEATURE FREQUENCY',
+                                  font=(Helper.fontstyle,Helper.headingfontsize),
+                                  fg=Helper.INK,bg=Helper.PAPER)
+        featureheadinglbl.grid(row=0,column=0,pady=(8,4))
+
+        f1, self.tv_file1 = self.create_table(featureframe)
+        f1.grid(row=1,column=0,sticky='nsew',padx=12,pady=(0,6))
+        f2, self.tv_file2 = self.create_table(featureframe)
+        f2.grid(row=2,column=0,sticky='nsew',padx=12,pady=(0,10))
         
     def create_listbox(self,master):
         scrollbar1 = Scrollbar(master,orient='vertical')
@@ -446,28 +477,21 @@ class GUI:
                 b.pack()
                 
     def create_table(self,master):
-        frame=Frame(master)
-        tv=ttk.Treeview(frame)
-        style = ttk.Style()
-        style.configure("Treeview.Heading", font=(Helper.fontstylebold, Helper.buttonfontsize))
+        frame=Frame(master, bg=Helper.PAPER)
+        tv=ttk.Treeview(frame, height=6)
         tv['columns'] = ('feature', 'frequency')
         tv.heading("#0", text='S.No', anchor='w')
-        tv.column('#0', anchor='w')
+        tv.column('#0', width=60, anchor='w')
         tv.heading("feature", text='Feature')
         tv.column('feature', anchor='center')
         tv.heading("frequency", text='Frequency')
-        tv.column('frequency', anchor='center')           
-                   
-        #tv.grid(sticky=(N,S,W,E))
-        
-        scrollbar=Scrollbar(frame,orient='vertical',command=tv.yview)
+        tv.column('frequency', anchor='center')
 
+        scrollbar=Scrollbar(frame,orient='vertical',command=tv.yview)
         tv.configure(yscrollcommand=scrollbar.set)
-        tv.pack(side=LEFT, expand=YES)
-        
-        scrollbar.pack(side=LEFT,expand=YES,fill=Y)
-        frame.pack(side=TOP,expand=YES)
-        return tv
+        tv.pack(side=LEFT, expand=YES, fill=BOTH)
+        scrollbar.pack(side=LEFT, fill=Y)
+        return frame, tv
     
     def load_tabledata(self,tv,data):
         i=0
@@ -480,33 +504,33 @@ class GUI:
 
     def create_dir_tree(self,master):
         
-        frame1 = Frame(master)
-        frame1.pack(side=TOP, expand=1, fill=BOTH)
-        self.dir_tree1 = ttk.Treeview(frame1)
-        self.dir_tree1.heading('#0',text='Project 1  Directory', anchor=W)
+        frame1 = Frame(master, bg=Helper.PAPER)
+        frame1.pack(side=LEFT, expand=1, fill=X, padx=(0,6))
+        self.dir_tree1 = ttk.Treeview(frame1, height=3)
+        self.dir_tree1.heading('#0',text='Project 1 Directory', anchor=W)
         parent_dir1 = self.dir_tree1.insert('', text='Project', index = 1)
 
         sub_pckg1 = self.dir_tree1.insert(parent_dir1,text = 'packages' ,index = 2)
-        
+
         self.dir_tree1.insert(sub_pckg1,text = 'source code', index = 1)
-        self.dir_tree1.pack(side = LEFT)
-        
+        self.dir_tree1.pack(side=LEFT, expand=1, fill=X)
+
         '''
         second project directory
         '''
-        
-        frame2 = Frame(master)
-        frame2.pack(side=TOP,expand = 1 ,fill =BOTH)
-        
-        self.dir_tree2 = ttk.Treeview(frame2)
+
+        frame2 = Frame(master, bg=Helper.PAPER)
+        frame2.pack(side=LEFT, expand=1, fill=X, padx=(6,0))
+
+        self.dir_tree2 = ttk.Treeview(frame2, height=3)
         self.dir_tree2.heading('#0', text='Project 2 Directory', anchor=W)
         parent_dir2 = self.dir_tree2.insert('', text='Project', index = 1)
-        
+
         sub_pckg2 = self.dir_tree2.insert(parent_dir2,text = 'packages' ,index = 2)
-        
+
         self.dir_tree2.insert(sub_pckg2, text='source code', index = 1)
-        
-        self.dir_tree2.pack(side=LEFT)
+
+        self.dir_tree2.pack(side=LEFT, expand=1, fill=X)
         
         
     '''
@@ -514,30 +538,49 @@ class GUI:
     '''
      
     def set_on_plagiarism_test(self,_):
-       self.run_progessbar()
-       #self.progressbar.start()
-       #self.progressbar.update()
-       #thread=threading.Thread(name='thread',target=self.test,args=())#,daemon=True)
-       self.thread=CustomThread()
-       #self.thread.start()
-       
-       f1=Directory.get_directory_of('com/vsa/datasets/project1')
-
-       f2=Directory.get_directory_of('com/vsa/datasets/project2')
-
-       self.test(f1,f2)
-       self.thread.stop()
-       #thread.start()
-       #thread.run()
-       #thread._delete()
-       #self.test()
-       
-       #self.set_listbox()
-       
-       self.progressbar.stop()
-       self.load_tabledata(self.tv_file1, self.feature1)
-  
-       self.load_tabledata(self.tv_file2, self.feature2)
+        # Validate BEFORE touching the progress bar, so an accidental click with
+        # nothing selected just shows the hint (no phantom progress that creeps
+        # forward on each repeat).
+        if not self.eventhandler.path1 or not self.eventhandler.path2:
+            messagebox.showinfo(
+                'Select two projects',
+                'Browse and select a folder for both Project 1 and Project 2 first.\n\n'
+                'No code handy? Use the bundled samples/demo-projects/project-a and project-b.')
+            return
+        if self.rb_metrics.get() not in (1, 2) or self.rb_tech.get() not in (1, 2):
+            messagebox.showinfo(
+                'Choose options',
+                'Select a metric (Halstead or NGram) and a technique '
+                '(Cosine or Euclidean) before running the test.')
+            return
+        exts = self.selected_extensions()
+        for label, p in (('Project 1', self.eventhandler.path1),
+                         ('Project 2', self.eventhandler.path2)):
+            if not [x for x in Directory.search_directories(p, exts) if x.strip()]:
+                messagebox.showinfo(
+                    'No source files',
+                    'No %s files were found in %s:\n%s\n\n'
+                    'Pick a folder that contains %s source files.'
+                    % ('/'.join(exts), label, p, '/'.join(exts)))
+                return
+        self.run_progessbar()
+        self.root.update_idletasks()
+        ok = False
+        try:
+            ok = self.test(None, None)
+        except Exception as e:
+            import traceback; traceback.print_exc()
+            messagebox.showerror('Comparison failed', str(e))
+        finally:
+            # The demo projects compare in a fraction of a second, so an
+            # indeterminate bar flickers by unseen. Leave it filled on success
+            # as a clear "done" state; reset to empty only when it failed.
+            self.progressbar.stop()
+            self.progressbar.config(mode='determinate')
+            self.progressbar['value'] = 100 if ok else 0
+        if ok:
+            self.load_tabledata(self.tv_file1, self.feature1)
+            self.load_tabledata(self.tv_file2, self.feature2)
 
     def set_listbox(self):
         self.feature1=self.tester.feature1
@@ -590,72 +633,48 @@ class GUI:
             self.plot.plot(self.chartframe,x1=self.feature1.keys(),y1=self.feature1.values[0],x2=self.feature2.keys(),y2=self.feature2.values[0])
 
     def test(self,f1,f2):
-        dataset_handler=DatasetHandler()
-         #if self.cosineTech:
-        #    techStr='Cosine'
-        techStr='cosine'
         filepath1=self.eventhandler.path1
         filepath2=self.eventhandler.path2
-        #filepath1=path1
-        #filepath2=path2
+        if not filepath1 or not filepath2:
+            messagebox.showinfo(
+                'Select two projects',
+                'Browse and select a folder for both Project 1 and Project 2 first.\n\n'
+                'No code handy? Use the bundled samples/demo-projects/project-a and project-b.')
+            return False
 
-        dirs1 = Directory.search_directories(filepath1,'.java')
-        dirs2 = Directory.search_directories(filepath2,'.java')
-        
-        if dirs1 is not None: #and not dirs1.empty():
-            #if len(name.strip())>0:
-            dirs1 = dirs1[:len(dirs1)-2]
-        
-        if dirs2 is not None: #and not dirs2.empty():
-            dirs2 = dirs2[:len(dirs2)-2]
-        
-        #res=self.datahandler.test_plagiarism(filepath1=filepath1,filepath2=filepath2,isNgram=self.isNgram,techStr=techStr)
-        #print(res)
-        
-        if self.isNgram:    
-            n=int(self.ngramentry.get())
-            metrics = NGram_Metrics(n)
+        # Metric: NGram (default) unless Halstead is explicitly chosen.
+        if self.rb_metrics.get() == 1:
+            metrics = HalsteadMetrics(language=self.language_var.get())
         else:
-            metrics = HalsteadMetrics()
-        
-        if self.rb_tech.get() == 1:
-            tech = CosineDistance()
-        elif self.rb_tech.get() == 2:
-            tech = Euclidean_Distance()
-        
-        CSVGenerator.generate_multiples_csv(filepath1, metrics, username='desktop')
-        CSVGenerator.generate_multiples_csv(filepath2, metrics, username='desktop', project_no=2)
+            try:
+                n = int(self.ngramentry.get())
+            except (ValueError, TypeError):
+                n = 2
+            metrics = NGram_Metrics(n, language=self.language_var.get())
 
-        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets/desktop/multiple_csv_project1'), username='desktop')
-        CSVGenerator.merge_all_csvs(Directory.get_directory_of('com/vsa/datasets/desktop/multiple_csv_project2'), username='desktop', project_no=2)
+        # Technique: Euclidean if chosen, otherwise Cosine (default) so the
+        # comparison never crashes on an unset selection.
+        tech = Euclidean_Distance() if self.rb_tech.get() == 2 else CosineDistance()
 
-        self.tester = Plagiarism_Tester()
-        df1 = dataset_handler.read_csv(file_name=['project1.csv'], address=Directory.get_directory_of('com/vsa/datasets/desktop/project1'))
-        df2 = dataset_handler.read_csv(file_name=['project2.csv'], address=Directory.get_directory_of('com/vsa/datasets/desktop/project2'))
-        
-        #print(df1[0].values[0])
+        # Route through the shared, verified project-comparison engine. It
+        # cleans its own dataset dirs first, so feature vectors from a previous
+        # run can't accumulate and break cosine similarity with a dimension
+        # mismatch.
+        clone = ProjectClone()
+        res = clone.test_project_clone(
+            file_names=['project1.csv', 'project2.csv'],
+            dirs=[filepath1, filepath2],
+            metrics=metrics, tech=tech, username='desktop')
 
-        feature1 = [x for x in df1[0].values]
-        feature2 = [x for x in df2[0].values]
-        
-        res = self.tester.run_test(metrics = metrics ,plagiarism_technique = tech , features=[feature1,feature2],is_project = True)        
-                    
-        #res = self.tester.run_test(metrics,tech)
-        
-        res=float("{0:.2f}".format(res*100))
-        self.resultlabel['text']=str(res)+' %'
-        self.resultlabel['fg']=Helper.MATCH if res>=95 else Helper.INK
-        
-        if self.tester.feature1 is not None and self.tester.feature2 is not None:
-            self.plotGui.feature1 = self.tester.feature1
-            self.plotGui.feature2 = self.tester.feature2
-            
-            self.feature1=self.tester.feature1
-            self.feature2=self.tester.feature2
-            #self.progressbar.stop()
-        
-        self.feature1 = df1[0]
-        self.feature2 = df2[0]
+        res = float("{0:.2f}".format(res * 100))
+        self.resultlabel['text'] = str(res) + ' %'
+        self.resultlabel['fg'] = Helper.MATCH if res >= 95 else Helper.INK
+
+        self.feature1 = clone.features[0]
+        self.feature2 = clone.features[1]
+        self.plotGui.feature1 = self.feature1
+        self.plotGui.feature2 = self.feature2
+        return True
     
 if __name__=="__main__":
     

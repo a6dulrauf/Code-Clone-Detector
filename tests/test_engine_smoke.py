@@ -13,12 +13,21 @@ def test_cosine_lower_for_dissimilar_vectors():
     assert diff < same
 
 
-def test_halstead_operators_path_is_module_relative():
-    import os
-    from com.vsa.metrics import HalsteadMetrics as hm_mod
-    ops = os.path.join(os.path.dirname(os.path.abspath(hm_mod.__file__)),
-                       '..', 'elements', 'operators')
-    assert os.path.exists(ops)
-    with open(ops) as f:
-        tokens = [line.strip() for line in f if line.strip()]
-    assert 'for' in tokens and 'int' in tokens
+def test_halstead_is_language_driven(tmp_path):
+    """Halstead now reads its operators from the language registry (no static
+    file), and its feature columns are the selected language's vocabulary."""
+    from com.vsa.metrics.HalsteadMetrics import HalsteadMetrics
+    from com.vsa.elements import languages
+
+    assert HalsteadMetrics(language='java').get_features() == languages.get('java').vocabulary
+    assert HalsteadMetrics(language='python').get_features() == languages.get('python').vocabulary
+    # Operator sets differ per language.
+    assert (HalsteadMetrics(language='python').language.operators
+            != HalsteadMetrics(language='java').language.operators)
+
+    # run() works with no external operators file.
+    src = tmp_path / "a.java"
+    src.write_text("public int add(int a, int b){ return a + b; }")
+    operators, operands = HalsteadMetrics(language='java').run(str(src))
+    assert isinstance(operators, dict) and isinstance(operands, dict)
+    assert operators.get('+', 0) >= 1

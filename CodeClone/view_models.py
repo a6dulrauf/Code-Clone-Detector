@@ -7,6 +7,10 @@ import os
 import tempfile
 
 from com.vsa.utilities.directories import Directory
+from com.vsa.elements import languages
+
+# Marker file written into a project folder to remember its language.
+LANG_MARKER = '.ccd_language'
 
 
 class ProjectViewModel:
@@ -16,9 +20,9 @@ class ProjectViewModel:
         self.features1 = []
         self.features2 = []
 
-    def run_test_Project(self, username, dirs=[], ngram=1):
+    def run_test_Project(self, username, dirs=[], ngram=1, language='java'):
         project_clone = ProjectClone()
-        nGram = NGram_Metrics(n=ngram)
+        nGram = NGram_Metrics(n=ngram, language=language)
 
         res = project_clone.test_project_clone(file_names=['project1.csv', 'project2.csv'], username=username, dirs=dirs, metrics=nGram,
                                                tech=CosineDistance())
@@ -84,6 +88,31 @@ class HelperViewModel:
             if filename.endswith('.java'):
                 return True
             return False
+
+    @staticmethod
+    def is_supported_file(filename, language='java'):
+        """True if filename has an extension for the given language."""
+        if filename and len(str(filename)) > 0:
+            return str(filename).lower().endswith(languages.get(language).extensions)
+        return False
+
+    @staticmethod
+    def set_project_language(project_dir, language):
+        """Persist a project's language in a marker file; returns the canonical name."""
+        name = languages.get(language).name
+        os.makedirs(project_dir, exist_ok=True)
+        with open(os.path.join(project_dir, LANG_MARKER), 'w') as f:
+            f.write(name)
+        return name
+
+    @staticmethod
+    def get_project_language(project_dir):
+        """Read a project's language marker; default 'java' if absent (old projects)."""
+        try:
+            with open(os.path.join(project_dir, LANG_MARKER)) as f:
+                return languages.get(f.read().strip()).name
+        except (OSError, IOError):
+            return languages.DEFAULT
 
     @staticmethod
     def path_tempFile(data):

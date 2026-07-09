@@ -1,0 +1,67 @@
+{% extends 'CodeClone/dashboard_base.html' %}
+
+{% block title %}Languages{% endblock %}
+{% block heading %}Languages{% endblock %}
+
+{% block dashboard_content %}
+<div class="stack" style="max-width:920px">
+
+  {% for message in messages %}
+    <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+
+  <div>
+    <span class="eyebrow">Extensible detection</span>
+    <h2 style="margin:.3rem 0 .2rem">Supported languages</h2>
+    <p class="muted" style="margin:0">The detector fingerprints code from a per-language token
+    vocabulary. Built-ins ship with the app; add your own below and it's usable immediately.</p>
+  </div>
+
+  <div class="card">
+    <div class="tablewrap">
+      <table class="ftable">
+        <thead><tr><th>Language</th><th>Extensions</th><th>Tokens</th><th>Source</th></tr></thead>
+        <tbody>
+          {% for row in language_rows %}
+          <tr>
+            <td class="feat"><strong>{{ row.label }}</strong> <span class="muted mono">{{ row.name }}</span></td>
+            <td class="mono">{{ row.extensions }}</td>
+            <td class="mono">{{ row.tokens }}</td>
+            <td>{% if row.builtin %}<span class="verdict verdict--distinct">built-in</span>{% else %}<span class="verdict verdict--clone">custom</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <span class="eyebrow">Add a language</span>
+    <h2 style="margin:.3rem 0 .2rem">Upload a definition</h2>
+    <p class="muted" style="margin:0">Paste a JSON definition following this shape. <code class="mono">keywords</code>
+    and <code class="mono">operators</code> are required; <code class="mono">operands</code> (type names)
+    are optional. The vocabulary is <code class="mono">keywords + operators + operands</code>.</p>
+  </div>
+
+  <form class="card card__pad" method="post" action="{% url 'languages' %}">
+    {% csrf_token %}
+    <label class="field-label" for="definition">Definition (JSON)</label>
+    <textarea id="definition" name="definition" spellcheck="false"
+              style="width:100%; min-height:320px; font-family:var(--mono); font-size:.82rem; padding:.7rem; box-sizing:border-box">{{ definition_text }}</textarea>
+    <button class="btn btn--primary btn--lg" type="submit" style="margin-top:1rem">Add language</button>
+  </form>
+
+  <p class="muted" style="font-size:.82rem">
+    Note: custom languages are stored in the app database. On a free host with no persistent
+    disk (like this demo on Render), they reset when the instance restarts — the same as
+    uploaded projects. Built-in languages are always available.
+  </p>
+
+</div>
+{% endblock %}
+
+{% block css %}
+<style>
+  textarea:focus { outline: 2px solid var(--brand); border-color: var(--brand); }
+</style>
+{% endblock %}

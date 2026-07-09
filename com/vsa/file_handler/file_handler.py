@@ -31,24 +31,18 @@ class File_Handler:
         except Exception as e:
             print(e.__str__)
             
-    def normalize(lines):
+    def normalize(lines, vocabulary=None):
+        # Keep only tokens in the language's structural vocabulary; strip out
+        # identifiers, literals, etc. Defaults to Java for backward compatibility.
+        if vocabulary is None:
+            vocabulary = Features.features
         replaceLines = lines
         normalizedLines = ''
-        ''''
-        for line in lines.split('\n'):
-            for word in line.split(' '):
-                if word in Features.features:
-                    normalizedLines+=word+' '
-                for ch in word:
-                    if ch in Features.features:
-                        normalizedLines+=ch+' '
-    
-        '''
         for line in replaceLines.split('\n'):
-            
+
             s = ''
             for word in line.split(' '):
-                if word not in Features.features:
+                if word not in vocabulary:
                     line = line.replace(word,'')
             normalizedLines += line
 

@@ -21,11 +21,29 @@ class Command(BaseCommand):
         self.stdout.write(f"demo user {'created' if created else 'updated'}: {DEMO_USER}/{DEMO_PASS}")
 
         samples = os.path.join(settings.BASE_DIR, "samples")
-        proj = os.path.join(settings.BASE_DIR, "projects", DEMO_USER, "demo-comparison")
-        for sub, f in (("project1", "Original.java"), ("project2", "NearClone.java")):
-            dest = os.path.join(proj, sub)
-            os.makedirs(dest, exist_ok=True)
-            src = os.path.join(samples, f)
-            if os.path.exists(src):
-                shutil.copy(src, os.path.join(dest, f))
-        self.stdout.write("demo project seeded: projects/demo/demo-comparison (project1/, project2/)")
+
+        # (project name, language, [(slot, source path)])
+        demos = [
+            ("demo-comparison", "java", [
+                ("project1", os.path.join(samples, "Original.java")),
+                ("project2", os.path.join(samples, "NearClone.java")),
+            ]),
+            ("demo-comparison-python", "python", [
+                ("project1", os.path.join(samples, "demo-projects-python", "project-a", "calculator.py")),
+                ("project2", os.path.join(samples, "demo-projects-python", "project-b", "math_helper.py")),
+            ]),
+            ("demo-comparison-js", "javascript", [
+                ("project1", os.path.join(samples, "demo-projects-js", "project-a", "calculator.js")),
+                ("project2", os.path.join(samples, "demo-projects-js", "project-b", "mathHelper.js")),
+            ]),
+        ]
+        for name, language, files in demos:
+            proj = os.path.join(settings.BASE_DIR, "projects", DEMO_USER, name)
+            for sub, src in files:
+                dest = os.path.join(proj, sub)
+                os.makedirs(dest, exist_ok=True)
+                if os.path.exists(src):
+                    shutil.copy(src, os.path.join(dest, os.path.basename(src)))
+            with open(os.path.join(proj, ".ccd_language"), "w") as marker:
+                marker.write(language)
+            self.stdout.write("demo project seeded: projects/%s/%s (%s)" % (DEMO_USER, name, language))

@@ -1,8 +1,13 @@
 # Code Clone Detector
 
 A Python tool that flags near-duplicate source files by comparing structural
-n-grams and Halstead software-science metrics. Three front-ends — CLI, desktop
-GUI, and a web app — share one detection engine.
+n-grams and Halstead software-science metrics. Ships with **six languages —
+Java, Python, C++, JavaScript, Kotlin, and C#** — and language support is
+**data-driven and extensible**: each language is just a token vocabulary, so you
+can add a new one by dropping a JSON definition in
+[`com/vsa/elements/langdefs/`](com/vsa/elements/langdefs/) or **uploading one at
+runtime** from the web app's *Languages* page — no code changes. Three
+front-ends — CLI, desktop GUI, and a web app — share one engine.
 
 ## Live demo
 
@@ -108,11 +113,15 @@ flowchart TD
 
 ## How it works (be honest)
 
-Each file is tokenized into a stream of structural tokens, then turned into
-**bi-grams (n-grams)** of those tokens plus a set of **Halstead software-science
-metrics** (operator/operand counts, vocabulary, length, volume, ...). The two
-feature vectors are compared with **cosine similarity** (and, for some paths,
-**Euclidean distance**) to produce a single similarity score.
+Each file is tokenized into a stream of structural tokens — keywords, brackets,
+operators, and type names drawn from the **selected language's vocabulary** —
+then turned into **bi-grams (n-grams)** of those tokens plus a set of **Halstead
+software-science metrics** (operator/operand counts, vocabulary, length, volume,
+...). The two feature vectors are compared with **cosine similarity** (and, for
+some paths, **Euclidean distance**) to produce a single similarity score. The
+vocabulary is the only language-specific part of the pipeline; everything
+downstream is language-agnostic, which is why supporting Java, Python, and C++
+is a matter of listing each language's tokens once.
 
 This measures **structural** similarity, not semantic equivalence — two
 files in the *same language* will always score high in absolute terms, because
@@ -135,6 +144,12 @@ make cli ARGS="compare samples/Original.java samples/NearClone.java"
 make desktop # Tkinter GUI
 make scan    # scan the whole tree for secrets on demand
 ```
+
+**No code of your own to test with?** The repo bundles sample files and two demo
+projects (`samples/`). See [`samples/README.md`](samples/README.md) for exactly what
+to select/upload in each interface — e.g. Browse to `samples/demo-projects/project-a`
+and `project-b` in the desktop app, or just run the pre-seeded `demo-comparison`
+project on the web.
 
 Notes:
 

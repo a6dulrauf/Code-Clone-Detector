@@ -38,8 +38,7 @@ class Helper:
     piechart='PieChart'
     plot='Plot'
     scatter='ScatterPlot'
-    note='Note: The plagiarism will\n be tested of source\nfile 2 with file 1.\nSo make sure to \nselect the right order '
-    note=''
+    note='No code handy? Browse the bundled demo projects:\nsamples/demo-projects/project-a  and  project-b'
     
     filenames=None
     

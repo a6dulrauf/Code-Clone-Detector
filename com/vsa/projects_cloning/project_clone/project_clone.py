@@ -18,6 +18,11 @@ class ProjectClone:
         tester = Plagiarism_Tester()
         dataset_handler = DatasetHandler()
 
+        # Start from a clean slate: stale per-file CSVs from a previous run
+        # would be re-merged here, giving the two projects mismatched feature
+        # dimensions and breaking cosine similarity.
+        Directory.delete_dir('com/vsa/datasets/'+username)
+
         self.generate_csvs(file_paths=dirs, username=username, metrics=metrics)
 
         file_paths = [Directory.get_directory_of('com/vsa/datasets/'+username+'/project1'),

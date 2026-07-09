@@ -58,10 +58,10 @@ class Plagiarism_Tester:
         
         '''
         '''
-        if type(metrics) is NGram_Metrics:    
-            feature = Features.get_feature_combinations(Features.features,metrics.n)
+        if type(metrics) is NGram_Metrics:
+            feature = Features.get_feature_combinations(metrics.get_features(),metrics.n)
         elif type(metrics) is HalsteadMetrics:
-            feature=Features.features
+            feature=metrics.get_features()
         #feature=Features.features
         #print(feature)
         dataset_dir = Directory.get_directory_of('datasets')

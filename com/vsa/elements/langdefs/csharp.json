@@ -1,0 +1,24 @@
+{
+  "name": "csharp",
+  "label": "C#",
+  "extensions": [".cs"],
+  "aliases": ["c#", "cs"],
+  "keywords": [
+    "class", "struct", "interface", "enum", "namespace", "using", "public",
+    "private", "protected", "internal", "static", "void", "if", "else",
+    "for", "foreach", "while", "do", "switch", "case", "default", "break",
+    "continue", "return", "new", "try", "catch", "finally", "throw", "this",
+    "base", "null", "true", "false", "const", "readonly", "override",
+    "virtual", "abstract", "sealed", "partial", "async", "await", "get",
+    "set", "var", "out", "ref", "params", "is", "as", "typeof"
+  ],
+  "operators": [
+    "{", "}", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "==", "!=",
+    "<", ">", "<=", ">=", "&&", "||", "!", "?.", "??", "=>", ".", ",", ";",
+    ":", "++", "--", "+=", "-="
+  ],
+  "operands": [
+    "string", "int", "bool", "double", "float", "long", "short", "byte",
+    "char", "decimal", "object", "List", "Dictionary", "IEnumerable", "Task"
+  ]
+}

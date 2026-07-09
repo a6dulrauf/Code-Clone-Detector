@@ -16,6 +16,8 @@ urlpatterns = [
     path('delete-project/', views.delete_project, name='delete-project'),
     path('delete-project/<project_name>', views.delete_project, name='delete-project'),
 
+    path('languages/', views.languages_view, name='languages'),
+
     path('contact-us/', views.contact_us, name='contact-us'),
     path('reg/', views.reg, name='reg'),
     path('log/', views.log, name='log'),

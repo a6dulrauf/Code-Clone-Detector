@@ -26,10 +26,11 @@ class Directory:
 
     @staticmethod
     def delete_dir(dir):
-        print(dir)
         path = os.path.realpath(dir)
         try:
             shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
         except Exception as e:
             print(e.__str__())
 
@@ -51,20 +52,14 @@ class Directory:
 
     @staticmethod
     def search_directories(target_dir, ext):
-        dirs = []
+        # ext may be a single extension ('.java') or an iterable of them
+        # (('.cpp', '.h')). str.endswith accepts a tuple of suffixes.
+        exts = (ext,) if isinstance(ext, str) else tuple(ext)
         s = ''
-        for root, dirs, files in os.walk(str(target_dir)):
+        for root, subdirs, files in os.walk(str(target_dir)):
             for file in files:
-                if file.endswith(ext):
+                if file.endswith(exts):
                      s = s + os.path.join(root, file) + ','
-                     
-        return [x for x in s.split(',')]
 
-    @staticmethod
-    def search_directory_path(target_dir, ext):
-        s = ''
-        for root, dirs, files in os.walk(str(target_dir)):
-            for file in files:
-                if file.endswith(ext):
-                     s = s + os.path.join(root, file) + ','
+        return [x for x in s.split(',')]
                      

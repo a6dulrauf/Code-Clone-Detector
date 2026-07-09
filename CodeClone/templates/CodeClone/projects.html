@@ -25,7 +25,11 @@
       </div>
       <div>
         <label class="field-label" for="project_language">Language</label>
-        <input id="project_language" name="project_language" type="text" placeholder="e.g. java" required>
+        <select id="project_language" name="project_language" class="input" required>
+          {% for value, label in language_options %}
+            <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
       </div>
       <button class="btn btn--dark" type="submit">Create project</button>
     </div>

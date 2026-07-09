@@ -1,0 +1,23 @@
+{
+  "name": "javascript",
+  "label": "JavaScript",
+  "extensions": [".js", ".jsx", ".mjs", ".cjs"],
+  "aliases": ["js", "node"],
+  "keywords": [
+    "function", "return", "if", "else", "for", "while", "do", "switch",
+    "case", "default", "break", "continue", "const", "let", "var", "class",
+    "extends", "new", "delete", "typeof", "instanceof", "in", "of", "this",
+    "super", "try", "catch", "finally", "throw", "import", "from", "export",
+    "async", "await", "yield", "static", "get", "set", "null", "undefined",
+    "true", "false"
+  ],
+  "operators": [
+    "{", "}", "(", ")", "[", "]", ";", ",", "+", "-", "*", "/", "%", "**",
+    "=", "==", "===", "!=", "!==", "<", ">", "<=", ">=", "&&", "||", "!",
+    "+=", "-=", "*=", "/=", "=>", "?", ":", "...", "&", "|", "^"
+  ],
+  "operands": [
+    "Number", "String", "Boolean", "Array", "Object", "Map", "Set",
+    "Promise", "Symbol", "BigInt"
+  ]
+}

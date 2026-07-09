@@ -7,19 +7,26 @@ Created on Thu Aug  8 13:17:23 2019
 
 from com.vsa.language_model.ngram.ngram import NGram
 from com.vsa.file_handler.file_handler import File_Handler
+from com.vsa.elements import languages
 
 class NGram_Metrics:
 
-    def __init__(self, n=1):
+    def __init__(self, n=1, language='java'):
         self.ngram = NGram()
         self.n = n
-        
+        self.language = languages.get(language)
+        self.vocabulary = self.language.vocabulary
+
     def get_n(self):
         return self.n
-    
+
+    def get_features(self):
+        """The structural token vocabulary this metric keeps (language-specific)."""
+        return self.vocabulary
+
     def run(self, file_path):
         lines=File_Handler.read_file_bi_gram(file_path)
-        lines=File_Handler.normalize(lines)
+        lines=File_Handler.normalize(lines, self.vocabulary)
         #print(lines)
         if len(lines) != 0:
             t_words=self.ngram.tokenize(lines)

@@ -23,7 +23,9 @@ class CSVGenerator:
     @staticmethod
     def generate_multiples_csv(dirs, metrics, username, project_no=1, web=False):
 
-        file_path = Directory.search_directories(dirs, '.java')
+        # Discover source files by the metric's language extensions (Java by default).
+        exts = getattr(getattr(metrics, 'language', None), 'extensions', '.java')
+        file_path = Directory.search_directories(dirs, exts)
         dataset_handler = None
 
         filenames=[]
@@ -35,7 +37,8 @@ class CSVGenerator:
         for path in file_path:
             if len(path.strip()) > 0:
                 datasets.append(metrics.run(path))
-                name = os.path.basename(path).replace('.java', '.csv')
+                # Any source extension (.java/.py/.cpp/...) -> per-file .csv name.
+                name = os.path.splitext(os.path.basename(path))[0] + '.csv'
                 if name.strip() != "":
                     filenames.append(name)
 
@@ -43,10 +46,10 @@ class CSVGenerator:
 
         dataframes = dataset_handler.pre_process_dataset(datasets)
         feature = Features.features
-        if type(metrics) is NGram_Metrics:    
-            feature = Features.get_feature_combinations(Features.features, metrics.n)
+        if type(metrics) is NGram_Metrics:
+            feature = Features.get_feature_combinations(metrics.get_features(), metrics.n)
         elif type(metrics) is HalsteadMetrics:
-            feature = Features.features
+            feature = metrics.get_features()
         if project_no == 1:
             dataset_handler.generate_csv(file_name=filenames, data_frames = dataframes, address=Directory.get_directory_of('com/vsa/datasets/'+username+'/multiple_csv_project1'), features=feature)
         elif project_no == 2:
@@ -60,7 +63,12 @@ class CSVGenerator:
         #print(dirs)
         name = [os.path.basename(x) for x in dirs if x.strip()]
         dfs=dataset_handler.read_csv(file_name=name, address=path)
-        
+
+        if not dfs:
+            raise ValueError(
+                'No feature data was produced for project %d — the selected '
+                'folder has no .java source files to compare.' % project_no)
+
         values = {}
         for key in dfs[0].columns:
             val = 0
