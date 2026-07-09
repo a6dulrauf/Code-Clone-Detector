@@ -6,11 +6,10 @@ GUI, and a web app — share one detection engine.
 
 ## Live demo
 
-The web app deploys to [Render](https://render.com) via the committed
+The web app is live on [Render](https://render.com), deployed via the committed
 [`render.yaml`](render.yaml) blueprint.
 
-**Demo:** `https://YOUR-APP.onrender.com` — *replace this placeholder with your
-Render URL after deploying.*
+**▶ Live demo: https://code-clone-detector-3xng.onrender.com**
 
 - Login: **`demo`** / **`demo12345`** (also shown as a hint on the login page)
 - Render's free tier spins down when idle — the first request after a while can
