@@ -46,8 +46,11 @@ A near-clone pair (renamed identifiers) and an unrelated pair:
     similarity: 90.37%   ->  NOT A CLONE
 ```
 
-**Desktop** — the Tkinter app (`make desktop`). Add a screenshot/GIF at
-`docs/media/desktop.png` (capture steps in [`docs/media/README.md`](docs/media/README.md)).
+**Desktop** — a **native Tkinter GUI** (it runs on your machine, not in the browser).
+Clone the repo, then `make setup` and `make desktop`. Screenshot below (capture
+steps in [`docs/media/README.md`](docs/media/README.md)):
+
+![Desktop app](docs/media/desktop.png)
 
 ## The three interfaces
 

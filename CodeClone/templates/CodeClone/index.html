@@ -74,18 +74,24 @@
       <div class="way"><div class="way__tag">CLI</div>
         <h3>Terminal</h3>
         <p class="muted" style="font-size:.92rem">Compare two files or two projects, or run the bundled demo.</p>
-        <code>make cli ARGS="compare a.java b.java"</code></div>
+        <code>make cli ARGS="compare samples/Original.java samples/NearClone.java"</code></div>
       <div class="way"><div class="way__tag">DESKTOP</div>
-        <h3>Tkinter app</h3>
-        <p class="muted" style="font-size:.92rem">Browse to two folders and compare interactively, with metric plots.</p>
+        <h3>Native app</h3>
+        <p class="muted" style="font-size:.92rem">A Tkinter GUI: browse to two folders and compare interactively, with metric plots. Runs locally.</p>
         <code>make desktop</code></div>
       <div class="way"><div class="way__tag">WEB</div>
         <h3>This app</h3>
-        <p class="muted" style="font-size:.92rem">Sign in and compare projects in the browser — try the demo now.</p>
+        <p class="muted" style="font-size:.92rem">Sign in and compare projects in the browser — try the demo right here.</p>
         <code>make web</code></div>
     </div>
-    <div style="margin-top:2rem">
-      <a class="btn btn--dark btn--lg" href="{% url 'dashboard' %}">Open the demo &rarr;</a>
+    <p class="muted" style="margin:1.4rem 0 0; font-size:.92rem">
+      The <strong>web app</strong> is the one you can try right here. The <strong>CLI</strong>
+      and <strong>desktop</strong> apps run on your machine — clone the repo, run
+      <code class="mono">make setup</code>, then <code class="mono">make desktop</code> or
+      <code class="mono">make cli</code>. Full setup in the README.</p>
+    <div style="margin-top:1.6rem; display:flex; gap:.8rem; flex-wrap:wrap">
+      <a class="btn btn--dark btn--lg" href="{% url 'dashboard' %}">Open the web demo &rarr;</a>
+      <a class="btn btn--ghost btn--lg" href="https://github.com/a6dulrauf/Code-Clone-Detector">Get the code on GitHub</a>
     </div>
   </div>
 </section>
