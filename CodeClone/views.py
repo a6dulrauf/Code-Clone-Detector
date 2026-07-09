@@ -146,8 +146,8 @@ def internal_features(request, project_name=None):
             messages.error(
                 request,
                 'Internal clone needs at least 2 %s files in Project %d (found %d). '
-                'Upload more files to that project, or try the seeded internal-demo project.'
-                % (language, project_no, len(srcs)))
+                'Upload more files, or open the seeded internal-demo-%s project.'
+                % (language, project_no, len(srcs), language))
             return render(request, "CodeClone/internal_features.html")
 
         try:

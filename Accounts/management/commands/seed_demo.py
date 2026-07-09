@@ -36,13 +36,28 @@ class Command(BaseCommand):
                 ("project1", os.path.join(samples, "demo-projects-js", "project-a", "calculator.js")),
                 ("project2", os.path.join(samples, "demo-projects-js", "project-b", "mathHelper.js")),
             ]),
-            # Multi-file project so "Internal clone" has file pairs to compare.
-            ("internal-demo", "java", [
+            # Multi-file projects so "Internal clone" has file pairs to compare
+            # (one per built-in demo language).
+            ("internal-demo-java", "java", [
                 ("project1", os.path.join(samples, "Original.java")),
                 ("project1", os.path.join(samples, "NearClone.java")),
                 ("project1", os.path.join(samples, "Unrelated.java")),
                 ("project2", os.path.join(samples, "Original.java")),
                 ("project2", os.path.join(samples, "NearClone.java")),
+            ]),
+            ("internal-demo-python", "python", [
+                ("project1", os.path.join(samples, "demo-projects-python", "project-a", "calculator.py")),
+                ("project1", os.path.join(samples, "demo-projects-python", "project-b", "math_helper.py")),
+                ("project1", os.path.join(samples, "python", "Unrelated.py")),
+                ("project2", os.path.join(samples, "demo-projects-python", "project-a", "calculator.py")),
+                ("project2", os.path.join(samples, "demo-projects-python", "project-b", "math_helper.py")),
+            ]),
+            ("internal-demo-javascript", "javascript", [
+                ("project1", os.path.join(samples, "demo-projects-js", "project-a", "calculator.js")),
+                ("project1", os.path.join(samples, "demo-projects-js", "project-b", "mathHelper.js")),
+                ("project1", os.path.join(samples, "javascript", "Unrelated.js")),
+                ("project2", os.path.join(samples, "demo-projects-js", "project-a", "calculator.js")),
+                ("project2", os.path.join(samples, "demo-projects-js", "project-b", "mathHelper.js")),
             ]),
         ]
         for name, language, files in demos:
