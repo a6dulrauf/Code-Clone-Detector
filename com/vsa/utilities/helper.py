@@ -11,14 +11,26 @@ class Helper:
         pass
     
     
-    fontstyle='Century gothic'
-    fontstylebold='Century gothic bold'
-    headingfontsize=14
-    buttonfontsize=10
-    resultfontsize=20
-    mainheading_label_size=18
-    
+    # Typography — macOS/Linux-safe families (Tk falls back gracefully)
+    fontstyle='Helvetica Neue'
+    fontstylebold='Helvetica Neue'
+    monofont='Menlo'
+    headingfontsize=13
+    buttonfontsize=11
+    resultfontsize=34
+    mainheading_label_size=20
+
     buttonforecolor=''
+
+    # Brand palette (matches the web app)
+    INK='#0C0F1A'
+    PAPER='#F4F5F7'
+    SURFACE='#FFFFFF'
+    MUTED='#59606E'
+    LINE='#E5E8EF'
+    BRAND='#4F46E5'
+    BRAND_INK='#3A32C4'
+    MATCH='#059669'
     
     
     histogram='Histogram'
@@ -43,8 +55,8 @@ class Helper:
                 
                 
     def get_filenames(dirs):
-        name = [x.split('\\')[len(x.split('\\'))-1] for x in dirs]
-        return name
+        import os
+        return [os.path.basename(x) for x in dirs]
         
 class StylingIds:
     

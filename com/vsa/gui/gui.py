@@ -42,7 +42,8 @@ class GUI:
         self.root.geometry('1024x600')
         self.root.resizable(1,1)
         self.root.title('Code Clone Detector')
-        self.mainFrame=Frame(self.root)
+        self._setup_theme()
+        self.mainFrame=Frame(self.root, bg=Helper.PAPER)
         
         self.mainFrame.pack(expand=YES,fill=BOTH,pady=5)
         
@@ -53,7 +54,7 @@ class GUI:
         #plot.plot_pie(data=[1,2,3,4],labels=['A','B','C','D'],master=self.bottomframe)      
         #self.create_tester_gui()
         #self.create_menubar()
-        self.mainFrame.configure(background='gray')
+        self.mainFrame.configure(background=Helper.PAPER)
         
         self.root.attributes('-alpha',1)
         
@@ -62,6 +63,35 @@ class GUI:
         #self.filename=filedialog.askopenfile()
         
         
+    def _setup_theme(self):
+        """Apply a modern, cohesive look: recolor classic Tk widgets via the
+        palette, and style ttk widgets (tables + accent button) via the clam theme."""
+        self.root.configure(bg=Helper.PAPER)
+        try:
+            self.root.tk_setPalette(background=Helper.PAPER, foreground=Helper.INK,
+                                    activeBackground=Helper.LINE, activeForeground=Helper.INK)
+        except Exception as e:
+            print(e)
+        self.style = ttk.Style()
+        try:
+            self.style.theme_use('clam')
+        except Exception as e:
+            print(e)
+        self.style.configure('Accent.TButton', background=Helper.BRAND, foreground='#FFFFFF',
+                             font=(Helper.fontstyle, Helper.buttonfontsize, 'bold'),
+                             borderwidth=0, relief='flat', padding=(16, 10))
+        self.style.map('Accent.TButton',
+                       background=[('active', Helper.BRAND_INK), ('pressed', Helper.BRAND_INK)])
+        self.style.configure('Treeview', background=Helper.SURFACE, fieldbackground=Helper.SURFACE,
+                             foreground=Helper.INK, rowheight=26, borderwidth=0,
+                             font=(Helper.fontstyle, 11))
+        self.style.configure('Treeview.Heading', background=Helper.PAPER, foreground=Helper.MUTED,
+                             font=(Helper.fontstyle, 10, 'bold'), relief='flat')
+        self.style.map('Treeview', background=[('selected', Helper.BRAND)],
+                       foreground=[('selected', '#FFFFFF')])
+        self.style.configure('TProgressbar', background=Helper.BRAND, troughcolor=Helper.LINE,
+                             borderwidth=0, thickness=10)
+
     def initGUI(self):
         self.create_menubar()
         self.plagiarism_result(self.topframe)
@@ -76,12 +106,12 @@ class GUI:
         self.create_dir_tree(self.left_dir_frame)
         
     def initFrames(self,root):
-        self.left_dir_frame = Frame(root,highlightbackground='black',highlightthickness=1,bd=1)
-        self.left_top_imgframe=Frame(root,highlightbackground='black',highlightthickness=1,bd=1)
-        self.leftframe=Frame(root,highlightbackground='black',highlightthickness=1,bd=1)
-        self.rightframe=Frame(root,highlightbackground='black',highlightthickness=1,bd=1)
-        self.topframe=Frame(root,highlightbackground='black',highlightthickness=1,bd=1)
-        self.bottomframe=Frame(root,highlightbackground='black',highlightthickness=1,bd=1,width=250)
+        self.left_dir_frame = Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0)
+        self.left_top_imgframe=Frame(root,bg=Helper.PAPER,highlightthickness=0,bd=0)
+        self.leftframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0)
+        self.rightframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0)
+        self.topframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0)
+        self.bottomframe=Frame(root,bg=Helper.PAPER,highlightbackground=Helper.LINE,highlightthickness=1,bd=0,width=250)
         
         self.left_top_imgframe.pack(side=TOP,fill=BOTH)
         self.left_dir_frame.pack(side=LEFT,fill=BOTH,expand=YES)
@@ -95,9 +125,10 @@ class GUI:
         self.rightframe.pack(side=RIGHT,fill=BOTH,expand=1)
 
     def main_heading(self,master):
-        main_headinglabel=Label(master,text="CODE CLONE DETECTOR",font=(Helper.fontstyle,Helper.mainheading_label_size))
-        font=(Helper.fontstyle,Helper.headingfontsize)
-        main_headinglabel.pack(side=LEFT,expand=1,fill=Y)
+        main_headinglabel=Label(master,text="Code Clone Detector",
+                                font=(Helper.fontstyle,Helper.mainheading_label_size,'bold'),
+                                fg=Helper.INK,bg=Helper.PAPER)
+        main_headinglabel.pack(side=LEFT,expand=1,fill=Y,padx=12)
         
     def place_image(self,master,path):
         canvas=Canvas(master,height=80)
@@ -128,11 +159,16 @@ class GUI:
         image=Image.open(path)
 
     def plagiarism_result(self,master):
-        self.resultlabel=Label(master,text='0% PLAGIARISM FOUND',font=(Helper.fontstyle,Helper.resultfontsize),width=500)
+        caption=Label(master,text='STRUCTURAL SIMILARITY',
+                      font=(Helper.fontstyle,10,'bold'),fg=Helper.BRAND,bg=Helper.PAPER)
+        caption.pack(side=TOP,fill=X,pady=(12,0))
+        self.resultlabel=Label(master,text='—',
+                               font=(Helper.monofont,Helper.resultfontsize,'bold'),
+                               fg=Helper.INK,bg=Helper.PAPER)
         self.resultlabel.pack(side=TOP,fill=X,expand=1)
-        
+
         self.progressbar=ttk.Progressbar(master,orient=HORIZONTAL,length=100,mode='determinate')
-        self.progressbar.pack(fill=X)
+        self.progressbar.pack(fill=X,padx=14,pady=(0,12))
         #self.run_progessbar()
     
     def run_progessbar(self):
@@ -174,11 +210,9 @@ class GUI:
         
         self.plagiaristech_check_buttons(testerframe)
         
-        btn_test=Button(testerframe,text='TEST PLAGIARISM',height=2)
-        btn_test.config(font=(Helper.fontstylebold,Helper.buttonfontsize))
-        btn_test.bind('<Button-1>',self.set_on_plagiarism_test)#_,rb_metrics=self.rb_metrics))
-        
-        btn_test.pack(side=BOTTOM,fill=X,expand=1)
+        btn_test=ttk.Button(testerframe,text='TEST PLAGIARISM',style='Accent.TButton',
+                            command=lambda: self.set_on_plagiarism_test(None))
+        btn_test.pack(side=BOTTOM,fill=X,expand=1,padx=8,pady=8)
         #btn_test.event_add(Event_Handler.set_on_plagiarism_test(self.rb_metrics))
         
     def open_srcfile_buttons(self,master):
@@ -609,7 +643,8 @@ class GUI:
         #res = self.tester.run_test(metrics,tech)
         
         res=float("{0:.2f}".format(res*100))
-        self.resultlabel['text']=str(res)+'%'+'PLAGIARISM FOUND'
+        self.resultlabel['text']=str(res)+' %'
+        self.resultlabel['fg']=Helper.MATCH if res>=95 else Helper.INK
         
         if self.tester.feature1 is not None and self.tester.feature2 is not None:
             self.plotGui.feature1 = self.tester.feature1
