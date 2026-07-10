@@ -176,8 +176,14 @@ it automatically; on an existing clone run `make hooks` once (needs
 ## Credits
 
 This is a revived and modernized version of a university project originally
-built by the repo owner ([a6dulrauf](https://github.com/a6dulrauf)). The
-revival fixed engine crashes under modern library versions, hardcoded paths,
-and packaging issues, then added the CLI, containerization, and Render
-deployment — the core n-gram/Halstead detection algorithm itself is unchanged
-from the original coursework.
+built by the repo owner ([a6dulrauf](https://github.com/a6dulrauf)). The core
+n-gram / Halstead detection algorithm is **unchanged from the original
+coursework**; the modernization effort added:
+
+- Fixed engine crashes under current library versions (numpy / pandas / scipy /
+  scikit-learn / nltk) and removed hardcoded, Windows-only paths (cross-platform).
+- A command-line interface (`compare`, `compare-projects`, `demo`) and a pytest suite.
+- Data-driven, extensible language support (six languages; add more via a JSON
+  vocabulary or a runtime upload — no code changes).
+- Docker packaging and a one-blueprint Render deployment.
+- A gitleaks pre-commit hook that blocks secrets from being committed.
